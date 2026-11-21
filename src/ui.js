@@ -9,7 +9,7 @@ import { state, ui, uid } from "./state.js";
 import { saveState } from "./storage.js";
 import { applyTheme } from "./themes.js";
 import { sCursor, sDecide } from "./sound.js";
-import { goScreen, toggleTask, startTask, revertTask, openDetail, moveTask, reorder } from "./actions.js";
+import { goScreen, toggleTask, advanceTask, startTask, revertTask, openDetail, moveTask, reorder } from "./actions.js";
 
 export function $(id) { return document.getElementById(id); }
 
@@ -94,9 +94,9 @@ export function searchConditions() {
 /* ---------- menu ---------- */
 export function menuBadge(id) {
   if (id === "quests") return openTasks(state.tasks).length + "件";
-  if (id === "schedule") {
-    const n = openTasks(state.tasks).filter((t) => isToday(t)).length;
-    return "今日 " + n + "件";
+  if (id === "kanban") {
+    const n = state.tasks.filter((t) => t.status === "doing").length;
+    return "進行中 " + n + "件";
   }
   if (id === "records") return doneTasks(state.tasks).length + "件完了";
   return "";
@@ -224,7 +224,7 @@ export function rowHtml(t, idx) {
   }
   return '<div class="trow p-' + t.priority + (t.status === "done" ? " done" : "") + (doing ? " doing" : "") + (idx === ui.kbIndex ? " kb" : "") + '" data-id="' + t.id + '" draggable="' + (ui.sort === "manual") + '">' +
     '<div class="pbar"></div>' +
-    '<button type="button" class="check" data-act="toggle" aria-label="' + (t.status === "done" ? "未完了に戻す" : "完了にする") + '"></button>' +
+    '<button type="button" class="check" data-act="advance" aria-label="次のステータスへ進む（' + (t.status === "done" ? "未完了" : t.status === "doing" ? "完了" : "進行中") + '）"></button>' +
     '<div class="main" data-act="open"><div class="ttl">' + esc(t.title) + '</div><div class="meta">' + meta + "</div></div>" +
     '<div class="ops">' + mv + opsBtns + '<button type="button" data-act="open">詳細</button></div>' +
     '<div class="stamp"><b>COMPLETE</b></div>' +
@@ -407,6 +407,7 @@ export function bindQuests() {
       const actEl = e.target.closest("[data-act]");
       const act = actEl ? actEl.getAttribute("data-act") : "open";
       if (act === "toggle") { toggleTask(id, row); }
+      else if (act === "advance") { advanceTask(id, row); }
       else if (act === "start") { startTask(id); }
       else if (act === "revert") { revertTask(id); }
       else if (act === "up") { moveTask(id, -1); }

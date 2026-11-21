@@ -109,6 +109,20 @@ export function normalizeSettings(raw) {
   return s;
 }
 
+export function nextStatus(status) {
+  if (status === "todo") return "doing";
+  if (status === "doing") return "done";
+  return "todo";
+}
+
+export function kanbanGroups(tasks) {
+  return {
+    todo: tasks.filter((t) => t.status === "todo"),
+    doing: tasks.filter((t) => t.status === "doing"),
+    done: tasks.filter((t) => t.status === "done"),
+  };
+}
+
 export function setStatus(t, status, now = new Date()) {
   t.status = status;
   t.completedAt = status === "done" ? (now instanceof Date ? now.toISOString() : String(now)) : "";
@@ -259,14 +273,6 @@ export function taskStats(tasks, today = todayStr()) {
     todayN: open.filter((t) => isToday(t, today)).length,
     next,
   };
-}
-
-export function shiftMonth(cursor, d) {
-  const p = cursor.split("-");
-  let y = +p[0], mo = +p[1] + d;
-  if (mo < 1) { mo = 12; y--; }
-  if (mo > 12) { mo = 1; y++; }
-  return y + "-" + pad(mo);
 }
 
 export function reorderTasks(tasks, srcId, dstId) {

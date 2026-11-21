@@ -6,8 +6,10 @@ import {
   categories, allTags, openTasks, doneTasks, createTask, normalizeTask,
   normalizeSettings, visibleTasks, searchConditions, pagerNumbers,
   pageCount, pageSlice, recRange, recFilteredDone, completionStreak,
-  taskStats, shiftMonth, reorderTasks, moveTaskOrder, setStatus, groupQuests,
+  taskStats, reorderTasks, moveTaskOrder, setStatus, groupQuests,
+  nextStatus, kanbanGroups,
 } from "../src/domain.js";
+import { PAGE_SIZE_MOBILE, PAGE_SIZE_PC } from "../src/config.js";
 import { saveState, loadState, serializeState, parseImport } from "../src/storage.js";
 import { applyTheme, accentRGB } from "../src/themes.js";
 
@@ -281,10 +283,24 @@ test("taskStats counts open/done/rate/overdue/today/next", () => {
   assert.equal(taskStats([], T).next, null);
 });
 
-test("shiftMonth wraps years", () => {
-  assert.equal(shiftMonth("2026-01", -1), "2025-12");
-  assert.equal(shiftMonth("2026-12", 1), "2027-01");
-  assert.equal(shiftMonth("2026-11", 1), "2026-12");
+test("nextStatus cycles todo -> doing -> done -> todo", () => {
+  assert.equal(nextStatus("todo"), "doing");
+  assert.equal(nextStatus("doing"), "done");
+  assert.equal(nextStatus("done"), "todo");
+  assert.equal(nextStatus("bogus"), "todo");
+});
+
+test("kanbanGroups splits by status, keeps order", () => {
+  const ts = [mk({ id: "a", status: "todo" }), mk({ id: "b", status: "doing" }), mk({ id: "c", status: "done" }), mk({ id: "d", status: "todo" })];
+  const g = kanbanGroups(ts);
+  assert.deepEqual(g.todo.map((t) => t.id), ["a", "d"]);
+  assert.deepEqual(g.doing.map((t) => t.id), ["b"]);
+  assert.deepEqual(g.done.map((t) => t.id), ["c"]);
+});
+
+test("page sizes: mobile 5, PC 30", () => {
+  assert.equal(PAGE_SIZE_MOBILE, 5);
+  assert.equal(PAGE_SIZE_PC, 30);
 });
 
 /* ---------- reorder ---------- */

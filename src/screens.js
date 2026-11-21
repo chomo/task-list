@@ -1,14 +1,14 @@
-import { THEMES, REC_FILTERS } from "./config.js";
+import { THEMES, REC_FILTERS, KANBAN_COLS } from "./config.js";
 import {
   pad, todayStr, fmtDate, fmtDateTime, isOverdue, isToday, priLabel, statusLabel, esc,
   parseTags, categories, allTags, doneTasks, createTask, recRange, recFilteredDone,
-  completionStreak, taskStats, shiftMonth, pageCount, pageSlice,
+  completionStreak, taskStats, kanbanGroups, pageCount, pageSlice,
 } from "./domain.js";
 import { state, ui, uid } from "./state.js";
 import { saveState, parseImport } from "./storage.js";
 import { sCursor, sDecide, sCancel, sWarn } from "./sound.js";
 import { $, toast, priBadge, tagChips, pagerHtml, bindPager, pageSize, renderMenu, renderQuests, updateHeader, reducedMotion, applySettings } from "./ui.js";
-import { goScreen, goBack, toggleTask, startTask, revertTask, openEdit } from "./actions.js";
+import { goScreen, goBack, toggleTask, startTask, revertTask, openDetail, openEdit, setTaskStatus } from "./actions.js";
 
 /* ---------- detail (read-only) ---------- */
 export function renderDetail(editId) {
@@ -151,95 +151,167 @@ export function confirmDelete(t) {
   });
 }
 
-/* ---------- schedule (S05) ---------- */
-export function rowHtmlSimple(t) {
-  const over = isOverdue(t);
-  const doing = t.status === "doing";
+/* ---------- kanban (S05) ---------- */
+function kcardHtml(t) {
+  const over = isOverdue(t), today = isToday(t) && t.status !== "done";
   let meta = "";
-  if (doing) meta += '<span class="badge-doing">進行中 DOING</span>';
   meta += priBadge(t);
-  if (t.category) meta += '<span class="cat">' + esc(t.category) + "</span>";
+  if (t.dueDate) meta += '<span class="due' + (over ? " over" : today ? " today" : "") + '">期限 ' + fmtDate(t.dueDate) + "</span>";
   if (over) meta += '<span class="badge-over">OVERDUE</span>';
+  if (today) meta += '<span class="badge-today">TODAY</span>';
+  if (t.category) meta += '<span class="cat">' + esc(t.category) + "</span>";
   meta += tagChips(t, false);
-  let opsBtns = "";
-  if (t.status === "done") {
-    opsBtns = '<button type="button" data-act="toggle">未完了に戻す</button>';
-  } else if (doing) {
-    opsBtns = '<button type="button" class="done-btn" data-act="toggle">完了にする</button>' +
-      '<button type="button" data-act="revert">未完了に戻す</button>';
-  } else {
-    opsBtns = '<button type="button" class="start-btn" data-act="start">開始</button>' +
-      '<button type="button" class="done-btn" data-act="toggle">完了にする</button>';
-  }
-  return '<div class="trow p-' + t.priority + (t.status === "done" ? " done" : "") + (doing ? " doing" : "") + '" data-id="' + t.id + '">' +
-    '<div class="pbar"></div>' +
-    '<button type="button" class="check" data-act="toggle" aria-label="' + (t.status === "done" ? "未完了に戻す" : "完了にする") + '"></button>' +
-    '<div class="main" data-act="open"><div class="ttl">' + esc(t.title) + '</div><div class="meta">' + meta + "</div></div>" +
-    '<div class="ops">' + opsBtns + '<button type="button" data-act="open">詳細</button></div>' +
-    '<div class="stamp"><b>COMPLETE</b></div></div>';
+  const ci = t.status === "done" ? 2 : t.status === "doing" ? 1 : 0;
+  let mv = "";
+  if (ci > 0) mv += '<button type="button" data-kmove="-1" aria-label="' + KANBAN_COLS[ci - 1].ja + 'へ移動">◀</button>';
+  if (ci < 2) mv += '<button type="button" data-kmove="1" aria-label="' + KANBAN_COLS[ci + 1].ja + 'へ移動">▶</button>';
+  return '<div class="kcard p-' + t.priority + (t.status === "done" ? " done" : "") + (t.status === "doing" ? " doing" : "") + '" data-id="' + t.id + '" draggable="true" tabindex="0" role="button" aria-label="' + esc(t.title) + ' — 詳細を開く">' +
+    '<div class="ktitle">' + esc(t.title) + '</div>' +
+    '<div class="kmeta">' + meta + "</div>" +
+    '<div class="kfoot"><span class="khint">ドラッグで移動</span><span class="kmove">' + mv + "</span></div>" +
+  "</div>";
 }
 
-export function renderSchedule() {
-  if (!ui.calCursor) { const n = new Date(); ui.calCursor = n.getFullYear() + "-" + pad(n.getMonth() + 1); }
-  if (!ui.calSel) ui.calSel = todayStr();
-  const parts = ui.calCursor.split("-"), y = +parts[0], mo = +parts[1];
-  const first = new Date(y, mo - 1, 1), startDow = first.getDay();
-  const days = new Date(y, mo, 0).getDate();
-  const prevDays = new Date(y, mo - 1, 0).getDate();
-  const byDate = {};
-  state.tasks.forEach((t) => { if (t.dueDate) { (byDate[t.dueDate] = byDate[t.dueDate] || []).push(t); } });
-  let cells = "";
-  ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].forEach((d) => { cells += '<div class="dowh">' + d + "</div>"; });
-  const total = Math.ceil((startDow + days) / 7) * 7;
-  for (let i = 0; i < total; i++) {
-    let dnum, dstr, dim = false;
-    if (i < startDow) { dnum = prevDays - startDow + 1 + i; const pm = new Date(y, mo - 2, dnum); dstr = pm.getFullYear() + "-" + pad(pm.getMonth() + 1) + "-" + pad(dnum); dim = true; }
-    else if (i >= startDow + days) { dnum = i - startDow - days + 1; const nm = new Date(y, mo, dnum); dstr = nm.getFullYear() + "-" + pad(nm.getMonth() + 1) + "-" + pad(dnum); dim = true; }
-    else { dnum = i - startDow + 1; dstr = y + "-" + pad(mo) + "-" + pad(dnum); }
-    const list = byDate[dstr] || [];
-    const hasOver = list.some((t) => t.status !== "done" && dstr < todayStr());
-    const dots = list.slice(0, 4).map(() => '<i class="' + (hasOver ? "over" : "") + '"></i>').join("");
-    cells += '<button type="button" class="cell' + (dim ? " dim" : "") + (dstr === todayStr() ? " today" : "") + (dstr === ui.calSel ? " sel" : "") + '" data-day="' + dstr + '">' +
-      '<span class="n">' + dnum + "</span>" + (list.length ? '<span class="dots">' + dots + '</span><span class="cnt">' + list.length + "件</span>" : "") + "</button>";
-  }
-  const dayTasks = byDate[ui.calSel] || [];
+function kbPageKey(status) { return status === "doing" ? "kbPageDoing" : status === "done" ? "kbPageDone" : "kbPageTodo"; }
+
+export function renderKanban() {
+  const groups = kanbanGroups(state.tasks);
+  const tabs = [["all", "全部"]].concat(KANBAN_COLS.map((c) => [c.status, c.ja]));
+  const tabsHtml = tabs.map((tb) => {
+    const n = tb[0] === "all" ? state.tasks.length : groups[tb[0]].length;
+    return '<button type="button" class="chip' + (ui.kbTab === tb[0] ? " on" : "") + '" data-ktab="' + tb[0] + '" aria-pressed="' + (ui.kbTab === tb[0] ? "true" : "false") + '"><span>' + tb[1] + " " + n + "件</span></button>";
+  }).join("");
+  const cols = KANBAN_COLS.map((c) => {
+    const list = groups[c.status];
+    const key = kbPageKey(c.status);
+    const psize = pageSize();
+    const pages = Math.max(1, Math.ceil(list.length / psize));
+    if (ui[key] > pages) ui[key] = pages;
+    if (ui[key] < 1) ui[key] = 1;
+    const pstart = (ui[key] - 1) * psize;
+    const slice = list.slice(pstart, pstart + psize);
+    return '<section class="kcol" data-status="' + c.status + '" aria-label="' + c.ja + '">' +
+      '<div class="kcol-head"><span class="ken">' + c.en + '</span><span class="kja">' + c.ja + '</span>' +
+      '<span class="kcount">' + list.length + "件</span></div>" +
+      '<div class="kdrop" data-status="' + c.status + '">' +
+      (list.length ? slice.map(kcardHtml).join("") : '<div class="kempty">タスクなし</div>') +
+      "</div>" +
+      pagerHtml(ui[key], pages, list.length, "data-kpage-" + c.status) +
+      "</section>";
+  }).join("");
   $("stage").innerHTML =
-    '<div class="panel slidein"><h2><span class="en">SCHEDULE</span>カレンダー</h2><div class="gold-rule"></div>' +
-    '<div class="calhead"><button type="button" id="calPrev">◀ PREV</button>' +
-    '<span class="ym">' + y + " / " + pad(mo) + "<small>" + ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"][mo - 1] + "</small></span>" +
-    '<button type="button" id="calNext">NEXT ▶</button>' +
-    '<button type="button" id="calToday">今日</button></div>' +
-    '<div class="calgrid">' + cells + "</div>" +
-    '<div class="daylist"><h3>' + fmtDate(ui.calSel) + " のタスク — " + dayTasks.length + "件</h3>" +
-    (dayTasks.length
-      ? dayTasks.map((t) => rowHtmlSimple(t)).join("")
-      : '<div class="empty"><b>この日の決戦はない</b>期限がこの日のタスクはない。</div>') +
-    "</div></div>";
-  $("calPrev").addEventListener("click", () => { shiftMonthCursor(-1); });
-  $("calNext").addEventListener("click", () => { shiftMonthCursor(1); });
-  $("calToday").addEventListener("click", () => {
-    const n = new Date(); ui.calCursor = n.getFullYear() + "-" + pad(n.getMonth() + 1); ui.calSel = todayStr();
-    sCursor(); renderSchedule();
-  });
-  Array.prototype.forEach.call(document.querySelectorAll(".cell"), (c) => {
-    c.addEventListener("click", () => { ui.calSel = c.getAttribute("data-day"); sCursor(); renderSchedule(); });
-  });
-  Array.prototype.forEach.call(document.querySelectorAll(".daylist .trow"), (row) => {
-    row.addEventListener("click", (e) => {
-      const id = row.getAttribute("data-id");
-      const actEl = e.target.closest("[data-act]");
-      const act = actEl ? actEl.getAttribute("data-act") : "";
-      if (act === "toggle") toggleTask(id, row);
-      else if (act === "start") startTask(id);
-      else if (act === "revert") revertTask(id);
-      else openDetail(id);
+    '<div class="panel slidein"><h2><span class="en">KANBAN</span>かんばんチャート</h2><div class="gold-rule"></div>' +
+    '<p class="lead"><span class="kdrag-text">カードをドラッグして列へ移すとステータスが変わる。</span>カードをタップすると詳細が開く。</p>' +
+    '<div class="chips ktabs" role="group" aria-label="ステータスで表示を切り替え">' + tabsHtml + "</div>" +
+    '<div class="kboard tab-' + ui.kbTab + '">' + cols + "</div></div>";
+  Array.prototype.forEach.call(document.querySelectorAll("[data-ktab]"), (el) => {
+    el.addEventListener("click", () => {
+      ui.kbTab = el.getAttribute("data-ktab");
+      sCursor(); renderKanban();
     });
   });
+  KANBAN_COLS.forEach((c) => {
+    const key = kbPageKey(c.status);
+    bindPager("data-kpage-" + c.status,
+      () => ui[key],
+      (p) => { ui[key] = p; },
+      () => { renderKanban(); });
+  });
+  bindKanban();
 }
 
-export function shiftMonthCursor(d) {
-  ui.calCursor = shiftMonth(ui.calCursor, d);
-  sCursor(); renderSchedule();
+function bindKanban() {
+  let dragId = null, dragged = false;
+  Array.prototype.forEach.call(document.querySelectorAll(".kcard"), (card) => {
+    const id = card.getAttribute("data-id");
+    card.addEventListener("dragstart", (e) => {
+      dragId = id; dragged = true;
+      card.classList.add("dragging");
+      if (e.dataTransfer) { e.dataTransfer.effectAllowed = "move"; try { e.dataTransfer.setData("text/plain", id); } catch (err) {} }
+    });
+    card.addEventListener("dragend", () => {
+      card.classList.remove("dragging");
+      Array.prototype.forEach.call(document.querySelectorAll(".kdrop"), (d) => { d.classList.remove("dragover"); });
+      setTimeout(() => { dragged = false; }, 0);
+    });
+    card.addEventListener("click", (e) => {
+      if (dragged) return;
+      const mv = e.target.closest("[data-kmove]");
+      if (mv) {
+        const cur = state.tasks.filter((x) => x.id === id)[0];
+        const ci = KANBAN_COLS.findIndex((c) => cur && cur.status === c.status);
+        const next = KANBAN_COLS[ci + (+mv.getAttribute("data-kmove"))];
+        if (next) setTaskStatus(id, next.status);
+        return;
+      }
+      openDetail(id);
+    });
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); openDetail(id); }
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".kdrop"), (drop) => {
+    drop.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+      drop.classList.add("dragover");
+    });
+    drop.addEventListener("dragleave", () => { drop.classList.remove("dragover"); });
+    drop.addEventListener("drop", (e) => {
+      e.preventDefault();
+      drop.classList.remove("dragover");
+      let id = dragId;
+      if (!id && e.dataTransfer) { try { id = e.dataTransfer.getData("text/plain"); } catch (err) {} }
+      if (id) setTaskStatus(id, drop.getAttribute("data-status"));
+      dragId = null;
+    });
+  });
+  /* touch drag */
+  let touchCard = null, touchGhost = null, touchMoved = false;
+  function clearTouch() {
+    if (touchGhost && touchGhost.parentNode) touchGhost.parentNode.removeChild(touchGhost);
+    touchGhost = null;
+    if (touchCard) touchCard.classList.remove("dragging");
+    touchCard = null; touchMoved = false;
+    Array.prototype.forEach.call(document.querySelectorAll(".kdrop"), (d) => { d.classList.remove("dragover"); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".kcard"), (card) => {
+    card.addEventListener("touchstart", () => {
+      touchCard = card; touchMoved = false;
+    }, { passive: true });
+    card.addEventListener("touchmove", (e) => {
+      if (!touchCard) return;
+      const tc = e.changedTouches[0];
+      if (!touchGhost) {
+        touchGhost = card.cloneNode(true);
+        touchGhost.classList.add("kghost");
+        touchGhost.style.width = card.offsetWidth + "px";
+        document.body.appendChild(touchGhost);
+        card.classList.add("dragging");
+      }
+      touchMoved = true;
+      touchGhost.style.left = (tc.clientX - touchGhost.offsetWidth / 2) + "px";
+      touchGhost.style.top = (tc.clientY - 30) + "px";
+      const el = document.elementFromPoint(tc.clientX, tc.clientY);
+      const drop = el && el.closest ? el.closest(".kdrop") : null;
+      Array.prototype.forEach.call(document.querySelectorAll(".kdrop"), (d) => { d.classList.toggle("dragover", d === drop); });
+      e.preventDefault();
+    }, { passive: false });
+    card.addEventListener("touchend", (e) => {
+      if (touchCard && touchMoved) {
+        const tc = e.changedTouches[0];
+        if (touchGhost) touchGhost.style.display = "none";
+        const el = document.elementFromPoint(tc.clientX, tc.clientY);
+        const drop = el && el.closest ? el.closest(".kdrop") : null;
+        const id = touchCard.getAttribute("data-id");
+        clearTouch();
+        dragged = true;
+        setTimeout(() => { dragged = false; }, 50);
+        if (drop) setTaskStatus(id, drop.getAttribute("data-status"));
+      } else clearTouch();
+    });
+    card.addEventListener("touchcancel", clearTouch);
+  });
 }
 
 /* ---------- records (S06) ---------- */
