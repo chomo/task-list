@@ -4,7 +4,7 @@ import { saveState } from "./storage.js";
 import { sDecide, sCancel, sComplete, sWarn } from "./sound.js";
 import { spawnBurst } from "./burst.js";
 import { $, toast, reducedMotion, updateHeader, renderMenu, renderStatus, renderQuests, visibleTasks } from "./ui.js";
-import { renderDetail, renderForm, renderSchedule, renderRecords, renderSystem } from "./screens.js";
+import { renderDetail, renderForm, renderKanban, renderRecords, renderSystem } from "./screens.js";
 
 export function goScreen(name, back) {
   ui.screen = name;
@@ -17,7 +17,7 @@ export function goScreen(name, back) {
     else if (name === "new") renderForm(null);
     else if (name === "detail") renderDetail(ui.editId);
     else if (name === "edit") renderForm(ui.editId);
-    else if (name === "schedule") renderSchedule();
+    else if (name === "kanban") renderKanban();
     else if (name === "records") renderRecords();
     else if (name === "system") renderSystem();
     renderMenu(false);
@@ -41,7 +41,7 @@ export function goBack() {
 }
 
 export function rerenderCurrent() {
-  if (ui.screen === "schedule") renderSchedule();
+  if (ui.screen === "kanban") renderKanban();
   else if (ui.screen === "detail") renderDetail(ui.editId);
   else if (ui.screen === "records") renderRecords();
   else if (ui.screen === "quests") renderQuests(false);
@@ -78,6 +78,23 @@ export function revertTask(id) {
   rerenderCurrent();
   renderMenu(false); updateHeader();
   toast("「" + t.title + "」を未完了に戻した");
+}
+
+export function advanceTask(id, rowEl) {
+  const t = state.tasks.filter((x) => x.id === id)[0];
+  if (!t) return;
+  if (t.status === "todo") { startTask(id); return; }
+  toggleTask(id, rowEl);
+}
+
+export function setTaskStatus(id, status) {
+  const t = state.tasks.filter((x) => x.id === id)[0];
+  if (!t || t.status === status) return;
+  setStatus(t, status);
+  if (status === "done") sComplete(); else sDecide();
+  saveState(localStorage, state);
+  renderKanban(); renderMenu(false); updateHeader();
+  toast("「" + t.title + "」を" + (status === "done" ? "完了" : status === "doing" ? "進行中" : "未完了") + "へ移した");
 }
 
 export function toggleTask(id, rowEl) {

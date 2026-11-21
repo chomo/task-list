@@ -15,7 +15,6 @@ initSound(state.settings);
 applySettings();
 tickClock();
 setInterval(tickClock, 20000);
-ui.calCursor = null;
 
 const menuToggleBtn = $("menuToggle");
 if (menuToggleBtn) menuToggleBtn.addEventListener("click", (e) => { e.stopPropagation(); toggleMenu(); });
