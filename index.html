@@ -427,7 +427,7 @@ body.reduced .mitem.enter{animation:fadein 150ms ease}
 var LS_KEY = "tasklist-space-v1";
 var MENU = [
   { id:"quests",   en:"TASKS",   ja:"タスク一覧",   desc:"未完了のタスクを確認する" },
-  { id:"new",      en:"NEW TASK",ja:"新規追加",     desc:"新たなタスクを受注する" },
+  { id:"new",      en:"NEW TASK",ja:"新規追加",     desc:"新たなタスクを追加する" },
   { id:"schedule", en:"SCHEDULE", ja:"カレンダー",   desc:"決戦日を月表示で確認する" },
   { id:"records",  en:"RECORDS",  ja:"実績・統計",   desc:"完了の記録を振り返る" },
   { id:"system",   en:"SYSTEM",   ja:"設定",         desc:"音・演出・データを管理する" }
@@ -682,7 +682,7 @@ function renderStatus(anim){
       '<div class="progress"><i style="width:' + rate + '%"></i></div>' +
       (next
         ? '<p class="nextdue">次の決戦 — <b>' + esc(next.title) + '</b>　<span class="when">' + fmtDate(next.dueDate) + (isOverdue(next) ? " ・ 超過" : "") + '</span></p>'
-        : '<p class="nextdue">期限つきのタスクはない。新たな受注は <b>NEW TASK</b> から。</p>') +
+        : '<p class="nextdue">期限つきのタスクはない。新たなタスクは <b>NEW TASK</b> から追加できる。</p>') +
       '<p class="lead" style="margin-top:18px">左のメニューから行き先を選べ。選択中の項目は <b style="color:var(--cyan)">' + m.en + '</b> — ' + esc(m.desc) + '。</p>' +
     '</div>';
 }
@@ -810,7 +810,7 @@ function renderQuests(anim){
     '<div class="panel' + (anim ? " slidein" : "") + '">' +
       '<h2><span class="en">TASKS</span>タスク一覧</h2><div class="gold-rule"></div>' +
       '<div class="quickadd' + (ui.quickOpen ? " open" : "") + '"><input type="text" id="quickTitle" placeholder="クイック追加 — タイトルを入力して Enter" maxlength="100" />' +
-      '<button type="button" class="btn" id="quickBtn">受注</button></div>' +
+      '<button type="button" class="btn" id="quickBtn">追加</button></div>' +
       searchToggleHtml +
       '<div class="search-body" id="searchBody"' + (ui.searchOpen ? "" : " hidden") + '>' +
       '<div class="toolbar">' +
@@ -829,7 +829,7 @@ function renderQuests(anim){
       '<div class="chips">' + chips + "</div>" +
       "</div>" +
       (list.length ? rows + doneHtml
-        : '<div class="empty"><b>タスクはない</b>条件に合うタスクが見つからない。NEW TASK から受注できる。</div>') +
+        : '<div class="empty"><b>タスクはない</b>条件に合うタスクが見つからない。NEW TASK から追加できる。</div>') +
     "</div>";
   syncFab(condActive);
   bindQuests();
@@ -862,7 +862,7 @@ function bindQuests(){
     state.tasks.unshift({ id: uid(), title: v.slice(0,100), note: "", dueDate: "", priority: "normal",
       category: "", status: "todo", subtasks: [], createdAt: new Date().toISOString(), completedAt: "" });
     save(); sDecide(); ui.kbIndex = 0; ui.quickOpen = false; renderQuests(false); renderMenu(false); updateHeader();
-    toast("タスクを受注した");
+    toast("タスクを追加した");
   };
   q.addEventListener("keydown", function(e){ if (e.key === "Enter") addQuick(); });
   $("quickBtn").addEventListener("click", addQuick);
@@ -993,7 +993,7 @@ function renderForm(editId){
   $("stage").innerHTML =
     '<div class="panel slidein">' +
       (isNew ? "" : '<div class="backrow"><button type="button" id="backBtn">◀ TASKS へ戻る</button></div>') +
-      '<h2><span class="en">' + (isNew ? "NEW TASK" : "DETAIL") + "</span>" + (isNew ? "新規タスク受注" : "タスク詳細・編集") + "</h2>" +
+      '<h2><span class="en">' + (isNew ? "NEW TASK" : "DETAIL") + "</span>" + (isNew ? "新規タスク追加" : "タスク詳細・編集") + "</h2>" +
       '<div class="gold-rule"></div>' +
       '<label class="f"><span>タイトル（必須・100文字まで）</span><input type="text" id="fTitle" maxlength="100" value="' + esc(t ? t.title : "") + '" placeholder="タスク名" /></label>' +
       '<label class="f"><span>メモ</span><textarea id="fNote" placeholder="メモ（改行可）">' + esc(t ? t.note : "") + "</textarea></label>" +
@@ -1010,7 +1010,7 @@ function renderForm(editId){
       '<div class="subedit" id="subEdit"></div>' +
       '<button type="button" class="btn ghost small" id="subAdd">＋ サブタスク追加</button>' +
       '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:28px">' +
-        '<button type="button" class="btn" id="saveBtn">' + (isNew ? "受注する" : "保存する") + "</button>" +
+        '<button type="button" class="btn" id="saveBtn">' + (isNew ? "追加する" : "保存する") + "</button>" +
         detailBtns +
         (isNew ? "" : '<button type="button" class="btn danger" id="delBtn">削除</button>') +
       "</div>" +
@@ -1039,7 +1039,7 @@ function renderForm(editId){
       state.tasks.unshift({ id: uid(), title: title.slice(0,100), note: $("fNote").value,
         dueDate: $("fDue").value, priority: ui.formPriority, category: $("fCat").value.trim(),
         status: "todo", subtasks: subs, createdAt: new Date().toISOString(), completedAt: "" });
-      save(); sDecide(); toast("タスクを受注した");
+      save(); sDecide(); toast("タスクを追加した");
       goScreen("quests", false);
     } else {
       t.title = title.slice(0,100); t.note = $("fNote").value; t.dueDate = $("fDue").value;
