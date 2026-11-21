@@ -199,6 +199,17 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan);outline:none;bo
 .toolbar select{width:auto;min-width:130px}
 .quickadd{display:flex;gap:10px;margin-bottom:18px}
 .quickadd input{flex:1}
+.fabbar{display:none}
+.fab{display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;padding:0;flex:none}
+.fab svg{display:block}
+.fab-add{width:58px;height:58px;background:var(--cyan);border:1px solid var(--cyan);color:#02122E;
+  box-shadow:0 6px 18px rgba(0,0,0,.5);font-size:32px;font-weight:300;line-height:1}
+.fab-add.on{background:#02122E;color:var(--cyan)}
+.fab-search{width:48px;height:48px;background:#02122E;border:1px solid var(--cyan);color:var(--cyan);
+  box-shadow:0 6px 18px rgba(0,0,0,.5);position:relative}
+.fab-search.on{background:var(--cyan);color:#02122E}
+.fab-search.has-cond::after{content:"";position:absolute;top:2px;right:2px;width:11px;height:11px;border-radius:50%;
+  background:var(--gold);border:2px solid #02122E}
 .grouplabel{font-family:var(--disp);letter-spacing:.24em;font-size:12px;color:var(--red);margin:18px 0 8px}
 .grouplabel.normal{color:var(--mut)}
 .trow{position:relative;display:grid;grid-template-columns:20px 52px minmax(0,1fr) auto;gap:6px;align-items:stretch;
@@ -327,6 +338,7 @@ footer.hints b{color:var(--gold);font-family:var(--disp);font-weight:700}
   .panel{padding:22px 20px 26px}
 }
 @media (max-width:639px){
+  header.top{display:none}
   .layout{grid-template-columns:1fr;margin-top:18px;overflow:hidden}
   nav.menu{order:0}
   .mtoggle{display:inline-flex}
@@ -344,6 +356,11 @@ footer.hints b{color:var(--gold);font-family:var(--disp);font-weight:700}
   .trow .main{padding-bottom:4px}
   .trow .ops{grid-column:3;grid-row:2;justify-self:start;align-self:start;padding:0 10px 12px 0}
   .trow .ops .done-btn{min-height:40px;padding:6px 18px}
+  .quickadd{display:none}
+  .quickadd.open{display:flex}
+  .search-toggle{display:none}
+  body.on-quests .fabbar{display:flex;position:fixed;right:calc(16px + env(safe-area-inset-right));
+    bottom:calc(18px + env(safe-area-inset-bottom));z-index:70;gap:12px;align-items:flex-end}
 }
 @media (hover:none){ footer.hints{display:none} }
 
@@ -372,9 +389,9 @@ body.reduced .mitem.enter{animation:fadein 150ms ease}
       <span class="clock" id="clockBig">--:--</span>
     </div>
     <div class="headstat">
-      <div class="hs"><b id="hsRemain">0</b><span>残クエスト</span></div>
+      <div class="hs"><b id="hsRemain">0</b><span>残タスク</span></div>
       <div class="hs"><b id="hsRate">0<em>%</em></b><span>達成率</span></div>
-      <div class="hs"><b id="hsDone">0</b><span>討伐済み</span></div>
+      <div class="hs"><b id="hsDone">0</b><span>完了済み</span></div>
     </div>
   </header>
 
@@ -391,11 +408,17 @@ body.reduced .mitem.enter{animation:fadein 150ms ease}
 
   <footer class="hints">
     <span><b>↑↓</b> 選択</span><span><b>ENTER</b> 決定</span><span><b>ESC</b> 戻る</span>
-    <span><b>SPACE</b> 完了切替</span><span><b>N</b> 新規クエスト</span><span><b>/</b> 検索</span>
+    <span><b>SPACE</b> 完了切替</span><span><b>N</b> 新規タスク</span><span><b>/</b> 検索</span>
   </footer>
 </div>
 
 <div class="overlay" id="overlay" role="dialog" aria-modal="true"></div>
+<div class="fabbar" id="fabbar">
+  <button type="button" class="fab fab-search" id="fabSearch" aria-label="検索を開く" aria-expanded="false" aria-controls="searchBody">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg>
+  </button>
+  <button type="button" class="fab fab-add" id="fabAdd" aria-label="クイック追加を開く" aria-expanded="false">＋</button>
+</div>
 <div class="toast" id="toast" role="status"></div>
 <input type="file" id="importFile" accept="application/json,.json" hidden />
 
@@ -403,16 +426,16 @@ body.reduced .mitem.enter{animation:fadein 150ms ease}
 "use strict";
 var LS_KEY = "tasklist-space-v1";
 var MENU = [
-  { id:"quests",   en:"QUESTS",   ja:"タスク一覧",   desc:"未完了のクエストを確認する" },
-  { id:"new",      en:"NEW QUEST",ja:"新規追加",     desc:"新たなクエストを受注する" },
+  { id:"quests",   en:"TASKS",   ja:"タスク一覧",   desc:"未完了のタスクを確認する" },
+  { id:"new",      en:"NEW TASK",ja:"新規追加",     desc:"新たなタスクを受注する" },
   { id:"schedule", en:"SCHEDULE", ja:"カレンダー",   desc:"決戦日を月表示で確認する" },
-  { id:"records",  en:"RECORDS",  ja:"実績・統計",   desc:"討伐の記録を振り返る" },
+  { id:"records",  en:"RECORDS",  ja:"実績・統計",   desc:"完了の記録を振り返る" },
   { id:"system",   en:"SYSTEM",   ja:"設定",         desc:"音・演出・データを管理する" }
 ];
 var state = { tasks: [], settings: { sound:true, volume:2, motion:true, theme:"blue" } };
 var ui = {
   screen: "quests", menuIndex: 0, menuFocus: false, menuOpen: false,
-  filter: "open", sort: "due", catFilter: "", search: "", searchOpen: false,
+  filter: "open", sort: "due", catFilter: "", search: "", searchOpen: false, quickOpen: false,
   showDone: false, kbIndex: 0, editId: null, calCursor: null, calSel: null,
   formPriority: "normal", formSubs: [], warnedFor: ""
 };
@@ -533,7 +556,7 @@ function menuBadge(id){
     var n = openTasks().filter(isToday).length;
     return "今日 " + n + "件";
   }
-  if (id === "records") return doneTasks().length + "件討伐";
+  if (id === "records") return doneTasks().length + "件完了";
   return "";
 }
 function renderMenu(entering){
@@ -607,6 +630,7 @@ function decideMenu(){
 /* ---------- screen transitions ---------- */
 function goScreen(name, back){
   ui.screen = name;
+  document.body.classList.toggle("on-quests", name === "quests");
   ui.menuOpen = false;
   ui.menuFocus = (name === "status");
   var render = function(){
@@ -650,7 +674,7 @@ function renderStatus(anim){
       '<div class="gold-rule"></div>' +
       '<div class="pat pat-' + ui.menuIndex + '"><span>' + m.en + ' — ' + esc(m.ja) + '</span></div>' +
       '<div class="statgrid">' +
-        '<div class="statbox"><b>' + open.length + '</b><span>残クエスト</span></div>' +
+        '<div class="statbox"><b>' + open.length + '</b><span>残タスク</span></div>' +
         '<div class="statbox gold"><b>' + todayN + '</b><span>今日が決戦日</span></div>' +
         '<div class="statbox red"><b>' + over + '</b><span>期限超過</span></div>' +
         '<div class="statbox"><b>' + rate + '<small>%</small></b><span>達成率</span></div>' +
@@ -658,7 +682,7 @@ function renderStatus(anim){
       '<div class="progress"><i style="width:' + rate + '%"></i></div>' +
       (next
         ? '<p class="nextdue">次の決戦 — <b>' + esc(next.title) + '</b>　<span class="when">' + fmtDate(next.dueDate) + (isOverdue(next) ? " ・ 超過" : "") + '</span></p>'
-        : '<p class="nextdue">期限つきのクエストはない。新たな受注は <b>NEW QUEST</b> から。</p>') +
+        : '<p class="nextdue">期限つきのタスクはない。新たな受注は <b>NEW TASK</b> から。</p>') +
       '<p class="lead" style="margin-top:18px">左のメニューから行き先を選べ。選択中の項目は <b style="color:var(--cyan)">' + m.en + '</b> — ' + esc(m.desc) + '。</p>' +
     '</div>';
 }
@@ -774,18 +798,18 @@ function renderQuests(anim){
     rows += '<p class="grouplabel">OVERDUE — 期限超過</p>' + overList.map(function(t){ return rowHtml(t, idx++); }).join("");
   }
   if (restList.length) {
-    rows += (overList.length ? '<p class="grouplabel normal">QUESTS — クエスト</p>' : "") + restList.map(function(t){ return rowHtml(t, idx++); }).join("");
+    rows += (overList.length ? '<p class="grouplabel normal">TASKS — タスク</p>' : "") + restList.map(function(t){ return rowHtml(t, idx++); }).join("");
   }
   var doneHtml = "";
   if (doneList.length) {
-    doneHtml = '<div class="donehead"><span>討伐済み — ' + doneList.length + '件</span>' +
+    doneHtml = '<div class="donehead"><span>完了済み — ' + doneList.length + '件</span>' +
       '<button type="button" id="doneToggle">' + (ui.showDone ? "畳む" : "展開する") + "</button></div>" +
       (ui.showDone ? doneList.map(function(t){ return rowHtml(t, idx++); }).join("") : "");
   }
   $("stage").innerHTML =
     '<div class="panel' + (anim ? " slidein" : "") + '">' +
-      '<h2><span class="en">QUESTS</span>タスク一覧</h2><div class="gold-rule"></div>' +
-      '<div class="quickadd"><input type="text" id="quickTitle" placeholder="クイック追加 — タイトルを入力して Enter" maxlength="100" />' +
+      '<h2><span class="en">TASKS</span>タスク一覧</h2><div class="gold-rule"></div>' +
+      '<div class="quickadd' + (ui.quickOpen ? " open" : "") + '"><input type="text" id="quickTitle" placeholder="クイック追加 — タイトルを入力して Enter" maxlength="100" />' +
       '<button type="button" class="btn" id="quickBtn">受注</button></div>' +
       searchToggleHtml +
       '<div class="search-body" id="searchBody"' + (ui.searchOpen ? "" : " hidden") + '>' +
@@ -805,9 +829,25 @@ function renderQuests(anim){
       '<div class="chips">' + chips + "</div>" +
       "</div>" +
       (list.length ? rows + doneHtml
-        : '<div class="empty"><b>クエストはない</b>条件に合うタスクが見つからない。NEW QUEST から受注できる。</div>') +
+        : '<div class="empty"><b>タスクはない</b>条件に合うタスクが見つからない。NEW TASK から受注できる。</div>') +
     "</div>";
+  syncFab(condActive);
   bindQuests();
+}
+function syncFab(condActive){
+  document.body.classList.toggle("on-quests", ui.screen === "quests");
+  var fa = $("fabAdd"), fs = $("fabSearch");
+  if (fa) {
+    fa.classList.toggle("on", ui.quickOpen);
+    fa.setAttribute("aria-expanded", ui.quickOpen ? "true" : "false");
+    fa.setAttribute("aria-label", ui.quickOpen ? "クイック追加を閉じる" : "クイック追加を開く");
+  }
+  if (fs) {
+    fs.classList.toggle("on", ui.searchOpen);
+    fs.classList.toggle("has-cond", !!condActive);
+    fs.setAttribute("aria-expanded", ui.searchOpen ? "true" : "false");
+    fs.setAttribute("aria-label", ui.searchOpen ? "検索を閉じる" : "検索を開く");
+  }
 }
 function bindQuests(){
   var stg = $("searchToggle");
@@ -821,8 +861,8 @@ function bindQuests(){
     var v = q.value.trim(); if (!v) return;
     state.tasks.unshift({ id: uid(), title: v.slice(0,100), note: "", dueDate: "", priority: "normal",
       category: "", status: "todo", subtasks: [], createdAt: new Date().toISOString(), completedAt: "" });
-    save(); sDecide(); ui.kbIndex = 0; renderQuests(false); renderMenu(false); updateHeader();
-    toast("クエストを受注した");
+    save(); sDecide(); ui.kbIndex = 0; ui.quickOpen = false; renderQuests(false); renderMenu(false); updateHeader();
+    toast("タスクを受注した");
   };
   q.addEventListener("keydown", function(e){ if (e.key === "Enter") addQuick(); });
   $("quickBtn").addEventListener("click", addQuick);
@@ -952,8 +992,8 @@ function renderForm(editId){
   }
   $("stage").innerHTML =
     '<div class="panel slidein">' +
-      (isNew ? "" : '<div class="backrow"><button type="button" id="backBtn">◀ QUESTS へ戻る</button></div>') +
-      '<h2><span class="en">' + (isNew ? "NEW QUEST" : "DETAIL") + "</span>" + (isNew ? "新規クエスト受注" : "クエスト詳細・編集") + "</h2>" +
+      (isNew ? "" : '<div class="backrow"><button type="button" id="backBtn">◀ TASKS へ戻る</button></div>') +
+      '<h2><span class="en">' + (isNew ? "NEW TASK" : "DETAIL") + "</span>" + (isNew ? "新規タスク受注" : "タスク詳細・編集") + "</h2>" +
       '<div class="gold-rule"></div>' +
       '<label class="f"><span>タイトル（必須・100文字まで）</span><input type="text" id="fTitle" maxlength="100" value="' + esc(t ? t.title : "") + '" placeholder="タスク名" /></label>' +
       '<label class="f"><span>メモ</span><textarea id="fNote" placeholder="メモ（改行可）">' + esc(t ? t.note : "") + "</textarea></label>" +
@@ -999,7 +1039,7 @@ function renderForm(editId){
       state.tasks.unshift({ id: uid(), title: title.slice(0,100), note: $("fNote").value,
         dueDate: $("fDue").value, priority: ui.formPriority, category: $("fCat").value.trim(),
         status: "todo", subtasks: subs, createdAt: new Date().toISOString(), completedAt: "" });
-      save(); sDecide(); toast("クエストを受注した");
+      save(); sDecide(); toast("タスクを受注した");
       goScreen("quests", false);
     } else {
       t.title = title.slice(0,100); t.note = $("fNote").value; t.dueDate = $("fDue").value;
@@ -1013,7 +1053,7 @@ function renderForm(editId){
   var tb = $("toggleBtn");
   if (tb) tb.addEventListener("click", function(){
     if (t.status === "done") { t.status = "todo"; t.completedAt = ""; save(); sCancel(); }
-    else { t.status = "done"; t.completedAt = new Date().toISOString(); save(); sComplete(); toast("COMPLETE — 討伐完了"); }
+    else { t.status = "done"; t.completedAt = new Date().toISOString(); save(); sComplete(); toast("COMPLETE — 完了"); }
     goScreen("quests", true);
   });
   var stb = $("startBtn");
@@ -1053,7 +1093,7 @@ function renderSubEditor(){
 function confirmDelete(t){
   var ov = $("overlay");
   ov.innerHTML =
-    '<div class="box"><h3><span class="en">DELETE</span>クエスト破棄</h3>' +
+    '<div class="box"><h3><span class="en">DELETE</span>タスク破棄</h3>' +
     '<p>「<b>' + esc(t.title) + '</b>」を削除する。この操作は取り消せない。</p>' +
     '<div class="acts"><button type="button" class="btn danger" id="ovYes">削除する</button>' +
     '<button type="button" class="btn ghost" id="ovNo">やめる</button></div></div>';
@@ -1062,7 +1102,7 @@ function confirmDelete(t){
   $("ovNo").addEventListener("click", function(){ ov.classList.remove("open"); sCancel(); });
   $("ovYes").addEventListener("click", function(){
     state.tasks = state.tasks.filter(function(x){ return x.id !== t.id; });
-    save(); ov.classList.remove("open"); sDecide(); toast("クエストを破棄した");
+    save(); ov.classList.remove("open"); sDecide(); toast("タスクを破棄した");
     goScreen("quests", true);
   });
 }
@@ -1099,10 +1139,10 @@ function renderSchedule(){
     '<button type="button" id="calNext">NEXT ▶</button>' +
     '<button type="button" id="calToday">今日</button></div>' +
     '<div class="calgrid">' + cells + "</div>" +
-    '<div class="daylist"><h3>' + fmtDate(ui.calSel) + " のクエスト — " + dayTasks.length + "件</h3>" +
+    '<div class="daylist"><h3>' + fmtDate(ui.calSel) + " のタスク — " + dayTasks.length + "件</h3>" +
     (dayTasks.length
       ? dayTasks.map(function(t, ix){ return rowHtmlSimple(t); }).join("")
-      : '<div class="empty"><b>この日の決戦はない</b>期限がこの日のクエストはない。</div>') +
+      : '<div class="empty"><b>この日の決戦はない</b>期限がこの日のタスクはない。</div>') +
     "</div></div>";
   $("calPrev").addEventListener("click", function(){ shiftMonth(-1); });
   $("calNext").addEventListener("click", function(){ shiftMonth(1); });
@@ -1186,17 +1226,17 @@ function renderRecords(){
   $("stage").innerHTML =
     '<div class="panel slidein"><h2><span class="en">RECORDS</span>実績・統計</h2><div class="gold-rule"></div>' +
     '<div class="statgrid">' +
-      '<div class="statbox"><b>' + done.length + '</b><span>総討伐数</span></div>' +
-      '<div class="statbox gold"><b>' + streak + '<small>日</small></b><span>連続討伐</span></div>' +
-      '<div class="statbox"><b>' + (byDay[todayStr()] || 0) + '</b><span>今日の討伐</span></div>' +
+      '<div class="statbox"><b>' + done.length + '</b><span>総完了数</span></div>' +
+      '<div class="statbox gold"><b>' + streak + '<small>日</small></b><span>連続完了</span></div>' +
+      '<div class="statbox"><b>' + (byDay[todayStr()] || 0) + '</b><span>今日の完了</span></div>' +
       '<div class="statbox"><b>' + rate + '<small>%</small></b><span>達成率</span></div>' +
     "</div>" +
-    '<h3 style="font-family:var(--serif);color:#fff;margin:26px 0 4px">日別討伐数 — 直近14日</h3>' +
+    '<h3 style="font-family:var(--serif);color:#fff;margin:26px 0 4px">日別完了数 — 直近14日</h3>' +
     '<div class="bars">' + days14.map(function(d){
       return '<div class="bar' + (d.v ? "" : " zero") + '" style="height:' + Math.max(3, d.v / max * 100) + '%" title="' + d.label + ": " + d.v + '件"></div>';
     }).join("") + "</div>" +
     '<div class="barlabels">' + days14.map(function(d){ return "<span>" + d.label + "</span>"; }).join("") + "</div>" +
-    (catRows ? '<h3 style="font-family:var(--serif);color:#fff;margin:26px 0 4px">カテゴリ別クエスト数</h3><div class="catlist">' + catRows + "</div>" : "") +
+    (catRows ? '<h3 style="font-family:var(--serif);color:#fff;margin:26px 0 4px">カテゴリ別タスク数</h3><div class="catlist">' + catRows + "</div>" : "") +
     "</div>";
 }
 
@@ -1385,6 +1425,20 @@ ui.calCursor = null;
 var menuToggleBtn = $("menuToggle");
 if (menuToggleBtn) menuToggleBtn.addEventListener("click", function(e){ e.stopPropagation(); toggleMenu(); });
 window.addEventListener("resize", syncMenuCollapse);
+var fabAddBtn = $("fabAdd");
+if (fabAddBtn) fabAddBtn.addEventListener("click", function(){
+  ui.quickOpen = !ui.quickOpen;
+  sCursor();
+  renderQuests(false);
+  if (ui.quickOpen) { var qi = $("quickTitle"); if (qi) qi.focus(); }
+});
+var fabSearchBtn = $("fabSearch");
+if (fabSearchBtn) fabSearchBtn.addEventListener("click", function(){
+  ui.searchOpen = !ui.searchOpen;
+  sCursor();
+  renderQuests(false);
+  if (ui.searchOpen) { var si = $("searchBox"); if (si) si.focus(); }
+});
 renderMenu(true);
 renderQuests(false);
 updateHeader();
