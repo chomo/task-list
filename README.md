@@ -11,7 +11,7 @@ JRPG-style task list. Daily task management as a command menu, inspired by the m
 - Theme: dark (default, generic dark mode) / blue (original deep blue) / white, switchable in SYSTEM, saved in localStorage; old dark migrates to dark, old blue/midnight migrates to blue
 - Start button marks a task as in progress (DOING)
 - Filters, incremental search, sorting (due date / priority / created / manual drag)
-- Month calendar (no week view), daily completion records
+- Month calendar (no week view); RECORDS shows a list of completed tasks, default filter today (today / yesterday / this week / this month / all), no daily graph
 - Settings: sound, motion, data management, JSON export/import
 - Default state: task list open, menu and search collapsed
 - Mobile: header (date / achievement) hidden; quick-add and search live behind floating "+" and magnifier buttons so the list fills the screen
