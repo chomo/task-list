@@ -11,6 +11,7 @@ JRPG-style task list. Daily task management as a command menu, inspired by the m
 - Month calendar (no week view), daily completion records
 - Settings: sound, motion, data management, JSON export/import
 - Default state: task list open, menu and search collapsed
+- Mobile: header (date / achievement) hidden; quick-add and search live behind floating "+" and magnifier buttons so the list fills the screen
 
 ## Files
 
