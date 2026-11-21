@@ -563,7 +563,7 @@ var MENU = [
   { id:"quests",   en:"TASKS",   ja:"タスク一覧",   desc:"未完了のタスクを確認する" },
   { id:"new",      en:"NEW TASK",ja:"新規追加",     desc:"新たなタスクを追加する" },
   { id:"schedule", en:"SCHEDULE", ja:"カレンダー",   desc:"決戦日を月表示で確認する" },
-  { id:"records",  en:"RECORDS",  ja:"実績・統計",   desc:"完了の記録を振り返る" },
+  { id:"records",  en:"RECORDS",  ja:"記録",         desc:"完了したタスクを確認する" },
   { id:"system",   en:"SYSTEM",   ja:"設定",         desc:"音・演出・データを管理する" }
 ];
 var state = { tasks: [], settings: { sound:true, volume:2, motion:true, theme:"dark" } };
@@ -576,7 +576,7 @@ var ui = {
   screen: "quests", menuIndex: 0, menuFocus: false, menuOpen: false,
   filter: "open", sort: "due", catFilter: "", search: "", searchOpen: false, quickOpen: false,
   showDone: false, kbIndex: 0, editId: null, calCursor: null, calSel: null,
-  formPriority: "normal", formSubs: [], warnedFor: ""
+  formPriority: "normal", formSubs: [], warnedFor: "", recFilter: "today"
 };
 var audioCtx = null, toastTimer = null;
 
@@ -819,6 +819,7 @@ function goBack(){
 function rerenderCurrent(){
   if (ui.screen === "schedule") renderSchedule();
   else if (ui.screen === "detail") renderDetail(ui.editId);
+  else if (ui.screen === "records") renderRecords();
   else if (ui.screen === "quests") renderQuests(false);
 }
 
@@ -1403,6 +1404,52 @@ function shiftMonth(d){
 }
 
 /* ---------- records (S06) ---------- */
+function recDateStr(d){ return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()); }
+function recRange(filter){
+  var now = new Date(); now.setHours(0,0,0,0);
+  if (filter === "today") return { from: recDateStr(now), to: recDateStr(now), label: "当日 — " + fmtDate(recDateStr(now)) };
+  if (filter === "yesterday") {
+    var y = new Date(now); y.setDate(y.getDate() - 1);
+    return { from: recDateStr(y), to: recDateStr(y), label: "昨日 — " + fmtDate(recDateStr(y)) };
+  }
+  if (filter === "week") {
+    var sun = new Date(now); sun.setDate(sun.getDate() - sun.getDay());
+    var sat = new Date(sun); sat.setDate(sat.getDate() + 6);
+    return { from: recDateStr(sun), to: recDateStr(sat), label: "今週 — " + fmtDate(recDateStr(sun)) + " 〜 " + fmtDate(recDateStr(sat)) };
+  }
+  if (filter === "month") {
+    var f = new Date(now.getFullYear(), now.getMonth(), 1);
+    var l = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    return { from: recDateStr(f), to: recDateStr(l), label: "今月 — " + now.getFullYear() + "/" + (now.getMonth()+1) + "月" };
+  }
+  return { from: "", to: "", label: "全期間" };
+}
+function recFilteredDone(){
+  var done = doneTasks().slice().sort(function(a,b){
+    return (b.completedAt || "") < (a.completedAt || "") ? -1 : (b.completedAt || "") > (a.completedAt || "") ? 1 : 0;
+  });
+  if (ui.recFilter === "all") return done;
+  var r = recRange(ui.recFilter);
+  return done.filter(function(t){
+    if (!t.completedAt) return false;
+    var k = t.completedAt.slice(0, 10);
+    return k >= r.from && k <= r.to;
+  });
+}
+function recRowHtml(t){
+  var meta = "";
+  meta += priBadge(t);
+  if (t.completedAt) meta += '<span>完了 ' + esc(fmtDateTime(t.completedAt)) + "</span>";
+  if (t.dueDate) meta += '<span>期限 ' + fmtDate(t.dueDate) + "</span>";
+  if (t.category) meta += '<span class="cat">' + esc(t.category) + "</span>";
+  meta += subInfo(t);
+  return '<div class="trow p-' + t.priority + ' done" data-id="' + t.id + '">' +
+    '<div class="pbar"></div>' +
+    '<button type="button" class="check" data-act="toggle" aria-label="未完了に戻す"></button>' +
+    '<div class="main" data-act="open"><div class="ttl">' + esc(t.title) + '</div><div class="meta">' + meta + "</div></div>" +
+    '<div class="ops"><button type="button" data-act="toggle">未完了に戻す</button><button type="button" data-act="open">詳細</button></div>' +
+  "</div>";
+}
 function renderRecords(){
   var done = doneTasks();
   var byDay = {};
@@ -1415,34 +1462,43 @@ function renderRecords(){
     var k = cur.getFullYear() + "-" + pad(cur.getMonth()+1) + "-" + pad(cur.getDate());
     if (byDay[k]) { streak++; cur.setDate(cur.getDate() - 1); } else break;
   }
-  var days14 = [], max = 1;
-  for (var i = 13; i >= 0; i--) {
-    var d = new Date(); d.setDate(d.getDate() - i);
-    var key = d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate());
-    var v = byDay[key] || 0; if (v > max) max = v;
-    days14.push({ label: (d.getMonth()+1) + "/" + d.getDate(), v: v });
-  }
-  var catCount = {};
-  state.tasks.forEach(function(t){ if (t.category) catCount[t.category] = (catCount[t.category] || 0) + 1; });
-  var catRows = Object.keys(catCount).sort(function(a,b){ return catCount[b] - catCount[a]; })
-    .map(function(c){ return '<div class="crow"><span>' + esc(c) + "</span><b>" + catCount[c] + "件</b></div>"; }).join("");
   var total = state.tasks.length;
   var rate = total ? Math.round(done.length / total * 100) : 0;
+  var filters = [["today","当日"],["yesterday","昨日"],["week","今週"],["month","今月"],["all","全て"]];
+  var range = recRange(ui.recFilter);
+  var list = recFilteredDone();
+  var chips = filters.map(function(c){
+    return '<button type="button" class="chip' + (ui.recFilter === c[0] ? " on" : "") + '" data-recfilter="' + c[0] + '"><span>' + c[1] + "</span></button>";
+  }).join("");
   $("stage").innerHTML =
-    '<div class="panel slidein"><h2><span class="en">RECORDS</span>実績・統計</h2><div class="gold-rule"></div>' +
+    '<div class="panel slidein"><h2><span class="en">RECORDS</span>記録</h2><div class="gold-rule"></div>' +
     '<div class="statgrid">' +
       '<div class="statbox"><b>' + done.length + '</b><span>総完了数</span></div>' +
       '<div class="statbox gold"><b>' + streak + '<small>日</small></b><span>連続完了</span></div>' +
       '<div class="statbox"><b>' + (byDay[todayStr()] || 0) + '</b><span>今日の完了</span></div>' +
       '<div class="statbox"><b>' + rate + '<small>%</small></b><span>達成率</span></div>' +
     "</div>" +
-    '<h3 style="font-family:var(--serif);color:#fff;margin:26px 0 4px">日別完了数 — 直近14日</h3>' +
-    '<div class="bars">' + days14.map(function(d){
-      return '<div class="bar' + (d.v ? "" : " zero") + '" style="height:' + Math.max(3, d.v / max * 100) + '%" title="' + d.label + ": " + d.v + '件"></div>';
-    }).join("") + "</div>" +
-    '<div class="barlabels">' + days14.map(function(d){ return "<span>" + d.label + "</span>"; }).join("") + "</div>" +
-    (catRows ? '<h3 style="font-family:var(--serif);color:#fff;margin:26px 0 4px">カテゴリ別タスク数</h3><div class="catlist">' + catRows + "</div>" : "") +
+    '<h3 style="font-family:var(--serif);color:#fff;margin:26px 0 10px">完了タスク — ' + esc(range.label) + "（" + list.length + '件）</h3>' +
+    '<div class="chips" role="group" aria-label="期間フィルタ">' + chips + "</div>" +
+    (list.length
+      ? list.map(recRowHtml).join("")
+      : '<div class="empty"><b>完了タスクはない</b>' + (ui.recFilter === "today" ? "今日完了したタスクはない。" : "この期間に完了したタスクはない。") + "期間を切り替えて確認できる。</div>") +
     "</div>";
+  Array.prototype.forEach.call(document.querySelectorAll("[data-recfilter]"), function(el){
+    el.addEventListener("click", function(){
+      ui.recFilter = el.getAttribute("data-recfilter");
+      sCursor(); renderRecords();
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".trow"), function(row){
+    row.addEventListener("click", function(e){
+      var id = row.getAttribute("data-id");
+      var actEl = e.target.closest("[data-act]");
+      var act = actEl ? actEl.getAttribute("data-act") : "open";
+      if (act === "toggle") toggleTask(id, row);
+      else openDetail(id);
+    });
+  });
 }
 
 /* ---------- system (S07) ---------- */
