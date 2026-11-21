@@ -58,8 +58,10 @@ export function renderDetail(editId) {
         acts +
         '<button type="button" class="btn danger" id="delBtn">削除</button>' +
       '</div>' +
+      '<div class="backrow-bottom"><button type="button" id="backBtnBottom">◀ TASKS へ戻る</button></div>' +
     '</div>';
   $("backBtn").addEventListener("click", goBack);
+  $("backBtnBottom").addEventListener("click", goBack);
   $("editBtn").addEventListener("click", () => { openEdit(t.id); });
   const ds = $("dStart");
   if (ds) ds.addEventListener("click", () => { startTask(t.id); });
