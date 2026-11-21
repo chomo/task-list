@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="color-scheme" content="dark" />
+<meta name="color-scheme" content="dark light" />
 <link rel="icon" href="data:," />
 <title>タスクリスト</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,7 +30,55 @@ body{
   transition:background 600ms ease;
   min-height:100dvh;
 }
-body.theme-midnight{background:linear-gradient(var(--ang),#01040F 0%,#030B26 45%,#061636 80%,#0A2450 100%)}
+body{color-scheme:dark}
+body.theme-white{
+  color-scheme:light;
+  --cyan:#008FB8; --ink:#1B2A4A; --mut:#5A6B8C;
+  --red:#E11D48; --gold:#9A7F45; --gold-dim:rgba(154,127,69,.5);
+  --panel:rgba(255,255,255,.9); --panel2:rgba(255,255,255,.97);
+  background:linear-gradient(var(--ang),#FFFFFF 0%,#F2F6FF 45%,#E4EEFF 80%,#D3E4FF 100%);
+}
+body.theme-white .datebig .d,body.theme-white .headstat .hs b,body.theme-white .panel h2,
+body.theme-white .statbox b,body.theme-white .dtitle,body.theme-white .ditem p,
+body.theme-white .calhead .ym,body.theme-white .daylist h3,body.theme-white .overlay h3,
+body.theme-white .empty b,body.theme-white .setrow .t b,body.theme-white .nextdue b{color:#0A2450}
+body.theme-white .panel h3{color:#0A2450 !important}
+body.theme-white .mitem{color:#10243E}
+body.theme-white .mitem.sel .en{color:#02122E}
+body.theme-white input[type=text],body.theme-white input[type=date],body.theme-white input[type=search],
+body.theme-white textarea,body.theme-white select{background:rgba(255,255,255,.92);border-color:rgba(90,107,140,.5);color:#10243E}
+body.theme-white .trow{background:linear-gradient(100deg, rgba(255,255,255,.95), rgba(230,239,255,.85));border-color:rgba(90,107,140,.3)}
+body.theme-white .trow .ttl{color:#10243E}
+body.theme-white .trow.done .ttl{color:var(--mut)}
+body.theme-white .trow.doing{background:linear-gradient(100deg, rgba(207,241,255,.95), rgba(255,255,255,.9))}
+body.theme-white .trow .pbar::before{background:rgba(10,36,80,.18)}
+body.theme-white .trow.p-high .pbar::before{background:var(--red)}
+body.theme-white .trow.p-low .pbar::before{background:#5E7CB8}
+body.theme-white .trow.doing .pbar::before{background:var(--gold)}
+body.theme-white .trow .ops button{background:rgba(255,255,255,.7);border-color:rgba(90,107,140,.45);color:#10243E}
+body.theme-white .trow .ops .done-btn{background:var(--cyan);border-color:var(--cyan);color:#fff}
+body.theme-white .trow .ops .start-btn{background:var(--gold);border-color:var(--gold);color:#fff}
+body.theme-white .trow .stamp b{background:rgba(255,255,255,.75);color:#0A2450}
+body.theme-white .search-toggle{background:rgba(255,255,255,.75)}
+body.theme-white .search-toggle .st-label{color:#0A2450}
+body.theme-white .search-toggle .st-cond.st-none{color:rgba(90,107,140,.75)}
+body.theme-white .search-toggle.has-cond{background:linear-gradient(100deg, rgba(0,143,184,.14), rgba(255,255,255,.75) 65%)}
+body.theme-white .search-toggle.has-cond .st-cond{color:#0A2450}
+body.theme-white .chip.on{background:#0A2450;color:#fff;border-color:#0A2450}
+body.theme-white .cell{background:rgba(255,255,255,.75);border-color:rgba(90,107,140,.25);color:#10243E}
+body.theme-white .cell .n{color:#0A2450}
+body.theme-white .progress{background:rgba(10,36,80,.12)}
+body.theme-white .bars .bar.zero{background:rgba(10,36,80,.14)}
+body.theme-white .status .pat span{color:rgba(10,36,80,.65)}
+body.theme-white .dnote{background:rgba(255,255,255,.85);border-color:rgba(90,107,140,.3)}
+body.theme-white .dsubs li{background:rgba(255,255,255,.8);border-color:rgba(90,107,140,.25);color:#10243E}
+body.theme-white .badge-pri.p-normal{background:rgba(10,36,80,.07);border-color:rgba(90,107,140,.5);color:#10243E}
+body.theme-white .overlay{background:rgba(226,235,252,.86)}
+body.theme-white .toast{background:#FFFFFF;color:#0A2450}
+body.theme-white .fab-search{background:#FFFFFF}
+body.theme-white .fab-add.on{background:#FFFFFF}
+body.theme-white .switch{background:rgba(10,36,80,.12)}
+body.theme-white .bgfx .diamonds{opacity:.35}
 button,[role="button"],select,summary,input:not([type="checkbox"]){min-height:2.25rem}
 button{font-family:inherit;cursor:pointer}
 :focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
@@ -240,6 +288,36 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan);outline:none;bo
 .badge-today{background:var(--cyan);color:#02122E;font-weight:900;font-size:10px;padding:1px 8px;letter-spacing:.14em;transform:skewX(-10deg);display:inline-block}
 .badge-over{background:var(--red);color:#fff;font-weight:900;font-size:10px;padding:1px 8px;letter-spacing:.14em;transform:skewX(-10deg);display:inline-block}
 .badge-doing{background:var(--gold);color:#02122E;font-weight:900;font-size:10px;padding:1px 8px;letter-spacing:.14em;transform:skewX(-10deg);display:inline-block}
+.badge-pri{font-weight:900;font-size:10px;padding:1px 8px;letter-spacing:.12em;transform:skewX(-10deg);display:inline-block;border:1px solid transparent;white-space:nowrap}
+.badge-pri.p-high{background:var(--red);border-color:var(--red);color:#fff}
+.badge-pri.p-normal{background:rgba(255,255,255,.12);border-color:rgba(143,168,216,.55);color:var(--ink)}
+.badge-pri.p-low{background:#5E7CB8;border-color:#5E7CB8;color:#fff}
+
+/* ---------- detail (read-only) ---------- */
+.dtitle{font-size:22px;font-weight:900;color:#fff;overflow-wrap:anywhere;line-height:1.45;margin:2px 0 6px}
+.dtitle.done{color:var(--mut)}
+.dbadges{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.dgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
+.ditem{border-left:3px solid rgba(143,168,216,.45);padding:6px 0 6px 12px;background:linear-gradient(90deg, rgba(255,255,255,.05), transparent)}
+.ditem.pri-high{border-color:var(--red)}
+.ditem.pri-low{border-color:#5E7CB8}
+.ditem>span{display:block;font-size:11px;letter-spacing:.22em;color:var(--gold);font-weight:700;margin-bottom:4px}
+.ditem p{margin:0;font-size:15px;color:#fff;font-weight:700;overflow-wrap:anywhere}
+.ditem p.dim{color:var(--mut);font-weight:400}
+.dsec{margin-bottom:20px}
+.dsec>span{display:block;font-size:12px;letter-spacing:.22em;color:var(--gold);font-weight:700;margin-bottom:8px}
+.dnote{background:rgba(2,14,36,.6);border:1px solid rgba(143,168,216,.25);padding:14px 16px;font-size:14px;line-height:1.8;color:var(--ink);overflow-wrap:anywhere;white-space:pre-wrap;min-height:52px}
+.dnote.dim{color:var(--mut)}
+.dsubs{list-style:none;margin:0;padding:0}
+.dsubs li{display:flex;gap:10px;align-items:center;padding:9px 12px;margin-bottom:6px;background:rgba(2,14,36,.5);border:1px solid rgba(143,168,216,.18);font-size:14px;color:#fff;overflow-wrap:anywhere}
+.dsubs li .mark{flex:none;width:22px;height:22px;min-height:22px;border:2px solid var(--cyan);transform:rotate(45deg) scale(.68);position:relative}
+.dsubs li.done{color:var(--mut)}
+.dsubs li.done .mark{background:var(--cyan)}
+.dsubs li.done .sttl{text-decoration:line-through}
+.dsubs li .sdone{flex:none;margin-left:auto;font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--cyan);white-space:nowrap}
+.dempty{color:var(--mut);font-size:13px;border:1px dashed rgba(143,168,216,.35);padding:12px 14px}
+.dacts{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px;align-items:center}
+@media (max-width:639px){ .dgrid{grid-template-columns:1fr 1fr} .dtitle{font-size:19px} }
 .trow .ops{grid-column:4;grid-row:1;align-self:center;display:flex;gap:6px;padding-right:10px;flex-wrap:wrap}
 .trow .ops button{background:transparent;border:1px solid rgba(143,168,216,.4);color:var(--ink);min-height:36px;padding:4px 10px;font-size:12px}
 .trow .ops .mv{padding:4px 7px}
@@ -432,7 +510,8 @@ var MENU = [
   { id:"records",  en:"RECORDS",  ja:"実績・統計",   desc:"完了の記録を振り返る" },
   { id:"system",   en:"SYSTEM",   ja:"設定",         desc:"音・演出・データを管理する" }
 ];
-var state = { tasks: [], settings: { sound:true, volume:2, motion:true, theme:"blue" } };
+var state = { tasks: [], settings: { sound:true, volume:2, motion:true, theme:"dark" } };
+function normalizeTheme(v){ return (v === "white" || v === "light") ? "white" : "dark"; }
 var ui = {
   screen: "quests", menuIndex: 0, menuFocus: false, menuOpen: false,
   filter: "open", sort: "due", catFilter: "", search: "", searchOpen: false, quickOpen: false,
@@ -481,6 +560,15 @@ function fmtDate(s){
 }
 function isOverdue(t){ return t.status !== "done" && t.dueDate && t.dueDate < todayStr(); }
 function isToday(t){ return t.dueDate === todayStr(); }
+function fmtDateTime(s){
+  if (!s) return "";
+  var d = new Date(s);
+  if (isNaN(d.getTime())) return s;
+  return d.getFullYear() + "/" + (d.getMonth()+1) + "/" + d.getDate() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+}
+function priLabel(p){ return p === "high" ? "高" : p === "low" ? "低" : "通常"; }
+function priBadge(t){ return '<span class="badge-pri p-' + t.priority + '">優先度 ' + priLabel(t.priority) + "</span>"; }
+function statusLabel(t){ return t.status === "done" ? "完了" : t.status === "doing" ? "進行中" : "未完了"; }
 function esc(s){
   return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
     return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
@@ -534,8 +622,9 @@ function reducedMotion(){
   return !state.settings.motion || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 function applySettings(){
+  state.settings.theme = normalizeTheme(state.settings.theme);
   document.body.classList.toggle("reduced", reducedMotion());
-  document.body.classList.toggle("theme-midnight", state.settings.theme === "midnight");
+  document.body.classList.toggle("theme-white", state.settings.theme === "white");
 }
 function updateHeader(){
   var open = openTasks().length, done = doneTasks().length, total = state.tasks.length;
@@ -637,7 +726,8 @@ function goScreen(name, back){
     if (name === "status") renderStatus(true);
     else if (name === "quests") renderQuests(true);
     else if (name === "new") renderForm(null);
-    else if (name === "detail") renderForm(ui.editId);
+    else if (name === "detail") renderDetail(ui.editId);
+    else if (name === "edit") renderForm(ui.editId);
     else if (name === "schedule") renderSchedule();
     else if (name === "records") renderRecords();
     else if (name === "system") renderSystem();
@@ -655,8 +745,14 @@ function goScreen(name, back){
   setTimeout(function(){ w.classList.remove("go", "back"); }, 380);
 }
 function goBack(){
+  if (ui.screen === "edit") { sCancel(); goScreen("detail", true); return; }
   if (ui.screen === "detail") { sCancel(); goScreen("quests", true); return; }
   if (ui.screen !== "status") { sCancel(); goScreen("status", true); }
+}
+function rerenderCurrent(){
+  if (ui.screen === "schedule") renderSchedule();
+  else if (ui.screen === "detail") renderDetail(ui.editId);
+  else if (ui.screen === "quests") renderQuests(false);
 }
 
 /* ---------- status (S01 right panel) ---------- */
@@ -746,6 +842,7 @@ function rowHtml(t, idx){
   var doing = t.status === "doing";
   var meta = "";
   if (doing) meta += '<span class="badge-doing">進行中 DOING</span>';
+  meta += priBadge(t);
   if (t.dueDate) meta += '<span class="due' + (over ? " over" : today ? " today" : "") + '">期限 ' + fmtDate(t.dueDate) + "</span>";
   if (over) meta += '<span class="badge-over">OVERDUE</span>';
   if (today) meta += '<span class="badge-today">TODAY</span>';
@@ -928,7 +1025,7 @@ function startTask(id){
   if (!t || t.status === "done" || t.status === "doing") return;
   t.status = "doing";
   save(); sDecide();
-  if (ui.screen === "schedule") renderSchedule(); else renderQuests(false);
+  rerenderCurrent();
   renderMenu(false); updateHeader();
   toast("「" + t.title + "」を開始した — 進行中");
 }
@@ -937,14 +1034,14 @@ function revertTask(id){
   if (!t || t.status === "todo") return;
   t.status = "todo"; t.completedAt = "";
   save(); sCancel();
-  if (ui.screen === "schedule") renderSchedule(); else if (ui.screen === "detail") { goScreen("quests", true); return; } else renderQuests(false);
+  rerenderCurrent();
   renderMenu(false); updateHeader();
   toast("「" + t.title + "」を未完了に戻した");
 }
 function toggleTask(id, rowEl){
   var t = state.tasks.filter(function(x){ return x.id === id; })[0];
   if (!t) return;
-  var rerender = function(){ if (ui.screen === "schedule") renderSchedule(); else renderQuests(false); };
+  var rerender = function(){ rerenderCurrent(); };
   if (t.status !== "done") {
     var finish = function(){
       t.status = "done"; t.completedAt = new Date().toISOString();
@@ -970,30 +1067,87 @@ function openDetail(id){
   goScreen("detail", false);
 }
 
-/* ---------- form (S03 / S04) ---------- */
+function openEdit(id){
+  ui.editId = id;
+  sDecide();
+  goScreen("edit", false);
+}
+
+/* ---------- detail (read-only) ---------- */
+function renderDetail(editId){
+  var t = editId ? state.tasks.filter(function(x){ return x.id === editId; })[0] : null;
+  if (!t) { goScreen("quests", true); return; }
+  var over = isOverdue(t), today = isToday(t) && t.status !== "done";
+  var subs = t.subtasks || [];
+  var subDone = subs.filter(function(s){ return s.done; }).length;
+  var dueHtml = t.dueDate
+    ? esc(fmtDate(t.dueDate)) + (over ? ' <span class="badge-over">OVERDUE</span>' : today ? ' <span class="badge-today">TODAY</span>' : "")
+    : '<span style="color:var(--mut);font-weight:400">未設定</span>';
+  var statusBadge = t.status === "done"
+    ? '<span class="badge-today">完了 DONE</span>'
+    : t.status === "doing" ? '<span class="badge-doing">進行中 DOING</span>' : '<span class="badge-pri p-normal">未完了</span>';
+  var acts = "";
+  if (t.status === "done") {
+    acts = '<button type="button" class="btn gold" id="dRevert">未完了に戻す</button>';
+  } else if (t.status === "doing") {
+    acts = '<button type="button" class="btn gold" id="dToggle">完了にする</button>' +
+      '<button type="button" class="btn ghost" id="dRevert">未完了に戻す</button>';
+  } else {
+    acts = '<button type="button" class="btn gold" id="dStart">開始</button>' +
+      '<button type="button" class="btn gold" id="dToggle">完了にする</button>';
+  }
+  $("stage").innerHTML =
+    '<div class="panel slidein">' +
+      '<div class="backrow"><button type="button" id="backBtn">◀ TASKS へ戻る</button></div>' +
+      '<h2><span class="en">DETAIL</span>タスク詳細</h2>' +
+      '<div class="gold-rule"></div>' +
+      '<div class="dtitle' + (t.status === "done" ? " done" : "") + '">' + esc(t.title) + '</div>' +
+      '<div class="dbadges">' + statusBadge + priBadge(t) +
+        (over ? '<span class="badge-over">OVERDUE</span>' : "") + (today ? '<span class="badge-today">TODAY</span>' : "") + '</div>' +
+      '<div class="dgrid">' +
+        '<div class="ditem"><span>期限</span><p>' + dueHtml + '</p></div>' +
+        '<div class="ditem pri-' + t.priority + '"><span>優先度</span><p>' + priLabel(t.priority) + '</p></div>' +
+        '<div class="ditem"><span>カテゴリ</span><p>' + (t.category ? esc(t.category) : '<span style="color:var(--mut);font-weight:400">未設定</span>') + '</p></div>' +
+        '<div class="ditem"><span>状態</span><p>' + statusLabel(t) + '</p></div>' +
+        '<div class="ditem"><span>作成日</span><p>' + (t.createdAt ? esc(fmtDateTime(t.createdAt)) : '<span style="color:var(--mut);font-weight:400">—</span>') + '</p></div>' +
+        '<div class="ditem"><span>完了日時</span><p>' + (t.completedAt ? esc(fmtDateTime(t.completedAt)) : '<span style="color:var(--mut);font-weight:400">—（未完了）</span>') + '</p></div>' +
+      '</div>' +
+      '<div class="dsec"><span>メモ</span>' +
+        (t.note ? '<div class="dnote">' + esc(t.note) + '</div>' : '<div class="dnote dim">（メモなし）</div>') + '</div>' +
+      '<div class="dsec"><span>サブタスク — ' + subDone + ' / ' + subs.length + ' 完了</span>' +
+        (subs.length
+          ? '<ul class="dsubs">' + subs.map(function(s){
+              return '<li class="' + (s.done ? "done" : "") + '"><span class="mark" aria-hidden="true"></span><span class="sttl">' + esc(s.title) + '</span>' + (s.done ? '<span class="sdone">済</span>' : "") + '</li>';
+            }).join("") + '</ul>'
+          : '<div class="dempty">サブタスクはない</div>') + '</div>' +
+      '<div class="dacts">' +
+        '<button type="button" class="btn" id="editBtn">編集</button>' +
+        acts +
+        '<button type="button" class="btn danger" id="delBtn">削除</button>' +
+      '</div>' +
+    '</div>';
+  $("backBtn").addEventListener("click", goBack);
+  $("editBtn").addEventListener("click", function(){ openEdit(t.id); });
+  var ds = $("dStart");
+  if (ds) ds.addEventListener("click", function(){ startTask(t.id); });
+  var dtg = $("dToggle");
+  if (dtg) dtg.addEventListener("click", function(){ toggleTask(t.id, null); });
+  var drv = $("dRevert");
+  if (drv) drv.addEventListener("click", function(){ revertTask(t.id); });
+  $("delBtn").addEventListener("click", function(){ confirmDelete(t); });
+}
+
+/* ---------- form (new / edit only) ---------- */
 function renderForm(editId){
   var t = editId ? state.tasks.filter(function(x){ return x.id === editId; })[0] : null;
   if (editId && !t) { goScreen("quests", true); return; }
   ui.formPriority = t ? t.priority : "normal";
   ui.formSubs = t ? t.subtasks.map(function(s){ return { id: s.id, title: s.title, done: s.done }; }) : [];
   var isNew = !t;
-  var detailBtns = "";
-  if (!isNew) {
-    if (t.status === "done") {
-      detailBtns = '<button type="button" class="btn gold" id="toggleBtn">未完了に戻す</button>';
-    } else if (t.status === "doing") {
-      detailBtns = '<span class="badge-doing" style="align-self:center">進行中 DOING</span>' +
-        '<button type="button" class="btn gold" id="toggleBtn">完了にする</button>' +
-        '<button type="button" class="btn ghost" id="revertBtn">未完了に戻す</button>';
-    } else {
-      detailBtns = '<button type="button" class="btn gold" id="startBtn">開始</button>' +
-        '<button type="button" class="btn gold" id="toggleBtn">完了にする</button>';
-    }
-  }
   $("stage").innerHTML =
     '<div class="panel slidein">' +
-      (isNew ? "" : '<div class="backrow"><button type="button" id="backBtn">◀ TASKS へ戻る</button></div>') +
-      '<h2><span class="en">' + (isNew ? "NEW TASK" : "DETAIL") + "</span>" + (isNew ? "新規タスク追加" : "タスク詳細・編集") + "</h2>" +
+      (isNew ? "" : '<div class="backrow"><button type="button" id="backBtn">◀ 詳細へ戻る</button></div>') +
+      '<h2><span class="en">' + (isNew ? "NEW TASK" : "EDIT") + "</span>" + (isNew ? "新規タスク追加" : "タスク編集") + "</h2>" +
       '<div class="gold-rule"></div>' +
       '<label class="f"><span>タイトル（必須・100文字まで）</span><input type="text" id="fTitle" maxlength="100" value="' + esc(t ? t.title : "") + '" placeholder="タスク名" /></label>' +
       '<label class="f"><span>メモ</span><textarea id="fNote" placeholder="メモ（改行可）">' + esc(t ? t.note : "") + "</textarea></label>" +
@@ -1011,8 +1165,7 @@ function renderForm(editId){
       '<button type="button" class="btn ghost small" id="subAdd">＋ サブタスク追加</button>' +
       '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:28px">' +
         '<button type="button" class="btn" id="saveBtn">' + (isNew ? "追加する" : "保存する") + "</button>" +
-        detailBtns +
-        (isNew ? "" : '<button type="button" class="btn danger" id="delBtn">削除</button>') +
+        (isNew ? "" : '<button type="button" class="btn ghost" id="cancelBtn">キャンセル</button>') +
       "</div>" +
     "</div>";
   renderSubEditor();
@@ -1045,30 +1198,14 @@ function renderForm(editId){
       t.title = title.slice(0,100); t.note = $("fNote").value; t.dueDate = $("fDue").value;
       t.priority = ui.formPriority; t.category = $("fCat").value.trim(); t.subtasks = subs;
       save(); sDecide(); toast("保存した");
-      goScreen("quests", true);
+      goScreen("detail", true);
     }
   });
   var bb = $("backBtn");
   if (bb) bb.addEventListener("click", goBack);
-  var tb = $("toggleBtn");
-  if (tb) tb.addEventListener("click", function(){
-    if (t.status === "done") { t.status = "todo"; t.completedAt = ""; save(); sCancel(); }
-    else { t.status = "done"; t.completedAt = new Date().toISOString(); save(); sComplete(); toast("COMPLETE — 完了"); }
-    goScreen("quests", true);
-  });
-  var stb = $("startBtn");
-  if (stb) stb.addEventListener("click", function(){
-    t.status = "doing"; save(); sDecide(); toast("「" + t.title + "」を開始した — 進行中");
-    goScreen("quests", true);
-  });
-  var rvb = $("revertBtn");
-  if (rvb) rvb.addEventListener("click", function(){
-    t.status = "todo"; t.completedAt = ""; save(); sCancel(); toast("「" + t.title + "」を未完了に戻した");
-    goScreen("quests", true);
-  });
-  var db = $("delBtn");
-  if (db) db.addEventListener("click", function(){ confirmDelete(t); });
-  if (isNew) setTimeout(function(){ var f = $("fTitle"); if (f) f.focus(); }, reducedMotion() ? 30 : 400);
+  var cb = $("cancelBtn");
+  if (cb) cb.addEventListener("click", goBack);
+  setTimeout(function(){ var f = $("fTitle"); if (f) f.focus(); }, reducedMotion() ? 30 : 400);
 }
 function collectSubs(){
   Array.prototype.forEach.call(document.querySelectorAll("#subEdit .srow"), function(row, i){
@@ -1170,6 +1307,7 @@ function rowHtmlSimple(t){
   var doing = t.status === "doing";
   var meta = "";
   if (doing) meta += '<span class="badge-doing">進行中 DOING</span>';
+  meta += priBadge(t);
   if (t.category) meta += '<span class="cat">' + esc(t.category) + "</span>";
   if (over) meta += '<span class="badge-over">OVERDUE</span>';
   meta += subInfo(t);
@@ -1254,10 +1392,10 @@ function renderSystem(){
         return '<button type="button" data-vol="' + v + '"' + (s.volume === v ? ' class="on"' : "") + ">" + ["","小","中","大"][v] + "</button>";
       }).join("") + "</span></div>" +
     '<div class="setrow"><div class="t"><b>モーション</b><span>OFF でワイプとゆらぎを止め、フェードに置き換える</span></div>' + sw("motion", s.motion) + "</div>" +
-    '<div class="setrow"><div class="t"><b>テーマ</b><span>背景の色調</span></div>' +
+    '<div class="setrow"><div class="t"><b>テーマ</b><span>ダーク（デフォルト）／ホワイト（白基調）</span></div>' +
       '<span class="seg" id="themeSeg">' +
-        '<button type="button" data-theme="blue"' + (s.theme === "blue" ? ' class="on"' : "") + ">ブルー</button>" +
-        '<button type="button" data-theme="midnight"' + (s.theme === "midnight" ? ' class="on"' : "") + ">ミッドナイト</button>" +
+        '<button type="button" data-theme="dark"' + (s.theme === "dark" ? ' class="on"' : "") + ">ダーク</button>" +
+        '<button type="button" data-theme="white"' + (s.theme === "white" ? ' class="on"' : "") + ">ホワイト</button>" +
       "</span></div>" +
     '<h3 style="font-family:var(--serif);color:#fff;margin:28px 0 4px">データ管理</h3><div class="gold-rule"></div>' +
     '<p class="lead">保存先はこの端末の localStorage（キー: tasklist-space-v1）。タスク ' + state.tasks.length + "件を保持中。</p>" +
@@ -1337,7 +1475,7 @@ $("importFile").addEventListener("change", function(){
           if (d.settings[k] !== undefined) state.settings[k] = d.settings[k];
         });
       }
-      save(); applySettings();
+      applySettings(); save();
       toast("インポートした — " + tasks.length + "件");
       sDecide(); goScreen("quests", false);
     } catch(e) { toast("読み込めなかった — JSON の形式が違う"); }
