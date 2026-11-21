@@ -8,7 +8,7 @@ JRPG-style task list. Daily task management as a command menu, inspired by the m
 - Tasks (quests): add, edit, complete, delete, subtasks, priorities, due dates, categories
 - Detail screen is read-only (status, priority, due date, category, created/completed dates, note, subtask progress) with an Edit button; editing happens on a separate form screen that returns to the detail view after saving
 - Priority badge (高 / 通常 / 低) on every task list row and calendar daily list
-- Theme: dark (default, generic dark mode) / blue (original deep blue) / white, switchable in SYSTEM, saved in localStorage; old dark migrates to dark, old blue/midnight migrates to blue
+- Theme: dark (default, generic dark mode) / blue (original deep blue) / white / yellow (bright yellow-based, amber diagonal band, gold accent, dark brown text) / red (red-based dark theme, deep crimson background, red diagonal band), switchable in SYSTEM, saved in localStorage; old dark migrates to dark, old blue/midnight migrates to blue
 - Start button marks a task as in progress (DOING)
 - Filters, incremental search, sorting (due date / priority / created / manual drag)
 - Month calendar (no week view); RECORDS shows a list of completed tasks, default filter today (today / yesterday / this week / this month / all), no daily graph
