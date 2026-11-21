@@ -7,7 +7,7 @@ import {
   normalizeSettings, visibleTasks, searchConditions, pagerNumbers,
   pageCount, pageSlice, recRange, recFilteredDone, completionStreak,
   taskStats, reorderTasks, moveTaskOrder, setStatus, groupQuests,
-  nextStatus, kanbanGroups,
+  nextStatus, kanbanGroups, touchTask,
 } from "../src/domain.js";
 import { PAGE_SIZE_MOBILE, PAGE_SIZE_PC } from "../src/config.js";
 import { saveState, loadState, serializeState, parseImport } from "../src/storage.js";
@@ -18,7 +18,7 @@ const mk = (o) => ({
   id: o.id || "t1", title: o.title || "x", note: o.note || "", dueDate: o.dueDate || "",
   priority: o.priority || "normal", category: o.category || "", tags: o.tags || [],
   status: o.status || "todo", createdAt: o.createdAt || "2026-11-20T09:00:00.000Z",
-  completedAt: o.completedAt || "",
+  updatedAt: o.updatedAt, completedAt: o.completedAt || "",
 });
 const fakeStore = () => {
   const m = new Map();
@@ -128,6 +128,49 @@ test("createTask fills defaults", () => {
   const t2 = createTask({ id: "x2", title: "  spaced  ", priority: "high", tags: ["a", "a"] });
   assert.equal(t2.title, "spaced");
   assert.deepEqual(t2.tags, ["a"]);
+});
+
+test("createTask sets updatedAt = createdAt", () => {
+  const t = createTask({ id: "x1", title: "hello", now: new Date("2026-11-21T10:00:00.000Z") });
+  assert.equal(t.createdAt, "2026-11-21T10:00:00.000Z");
+  assert.equal(t.updatedAt, "2026-11-21T10:00:00.000Z");
+});
+
+test("touchTask stamps updatedAt", () => {
+  const t = mk({ updatedAt: "2026-11-20T09:00:00.000Z" });
+  touchTask(t, new Date("2026-11-21T10:00:00.000Z"));
+  assert.equal(t.updatedAt, "2026-11-21T10:00:00.000Z");
+  touchTask(t, "2026-11-21T11:00:00.000Z");
+  assert.equal(t.updatedAt, "2026-11-21T11:00:00.000Z");
+});
+
+test("normalizeTask backfills updatedAt from createdAt", () => {
+  const t = mk({});
+  delete t.updatedAt;
+  normalizeTask(t);
+  assert.equal(t.updatedAt, "2026-11-20T09:00:00.000Z");
+  const kept = mk({ updatedAt: "2026-11-21T08:00:00.000Z" });
+  normalizeTask(kept);
+  assert.equal(kept.updatedAt, "2026-11-21T08:00:00.000Z");
+});
+
+test("loadState backfills updatedAt for legacy tasks", () => {
+  const store = fakeStore();
+  const old = { tasks: [mk({ id: "o", title: "old" })], settings: {} };
+  delete old.tasks[0].updatedAt;
+  store.setItem("tasklist-space-v1", JSON.stringify(old));
+  const loaded = loadState(store);
+  assert.equal(loaded.tasks[0].updatedAt, "2026-11-20T09:00:00.000Z");
+});
+
+test("parseImport backfills updatedAt from createdAt", () => {
+  const t = mk({ id: "a" });
+  delete t.updatedAt;
+  const ok = parseImport(JSON.stringify({ tasks: [t] }));
+  assert.equal(ok.tasks[0].updatedAt, "2026-11-20T09:00:00.000Z");
+  const kept = mk({ id: "b", updatedAt: "2026-11-21T08:00:00.000Z" });
+  const ok2 = parseImport(JSON.stringify([kept]));
+  assert.equal(ok2.tasks[0].updatedAt, "2026-11-21T08:00:00.000Z");
 });
 
 test("normalizeTask migrates old data (bad status, subtasks, raw tags)", () => {

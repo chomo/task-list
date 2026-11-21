@@ -1,4 +1,4 @@
-import { isOverdue, reorderTasks, moveTaskOrder, setStatus, themeAccent } from "./domain.js";
+import { isOverdue, reorderTasks, moveTaskOrder, setStatus, themeAccent, touchTask } from "./domain.js";
 import { state, ui } from "./state.js";
 import { saveState } from "./storage.js";
 import { sDecide, sCancel, sComplete, sWarn } from "./sound.js";
@@ -50,12 +50,14 @@ export function rerenderCurrent() {
 export function moveTask(id, dir) {
   const vis = visibleTasks().map((t) => t.id);
   if (!moveTaskOrder(state.tasks, id, dir, vis)) return;
+  touchTask(state.tasks.filter((x) => x.id === id)[0]);
   saveState(localStorage, state);
   renderQuests(false);
 }
 
 export function reorder(srcId, dstId) {
   if (!reorderTasks(state.tasks, srcId, dstId)) return;
+  touchTask(state.tasks.filter((x) => x.id === srcId)[0]);
   saveState(localStorage, state);
   renderQuests(false);
 }
@@ -64,6 +66,7 @@ export function startTask(id) {
   const t = state.tasks.filter((x) => x.id === id)[0];
   if (!t || t.status === "done" || t.status === "doing") return;
   setStatus(t, "doing");
+  touchTask(t);
   saveState(localStorage, state); sDecide();
   rerenderCurrent();
   renderMenu(false); updateHeader();
@@ -74,6 +77,7 @@ export function revertTask(id) {
   const t = state.tasks.filter((x) => x.id === id)[0];
   if (!t || t.status === "todo") return;
   setStatus(t, "todo");
+  touchTask(t);
   saveState(localStorage, state); sCancel();
   rerenderCurrent();
   renderMenu(false); updateHeader();
@@ -91,6 +95,7 @@ export function setTaskStatus(id, status) {
   const t = state.tasks.filter((x) => x.id === id)[0];
   if (!t || t.status === status) return;
   setStatus(t, status);
+  touchTask(t);
   if (status === "done") sComplete(); else sDecide();
   saveState(localStorage, state);
   renderKanban(); renderMenu(false); updateHeader();
@@ -113,6 +118,7 @@ export function toggleTask(id, rowEl) {
     }
     const finish = () => {
       setStatus(t, "done");
+      t.updatedAt = t.completedAt;
       saveState(localStorage, state); rerender(); renderMenu(false); updateHeader();
       toast("COMPLETE — 「" + t.title + "」を完了した");
     };
@@ -122,6 +128,7 @@ export function toggleTask(id, rowEl) {
     setTimeout(finish, 900);
   } else {
     setStatus(t, "todo");
+    touchTask(t);
     saveState(localStorage, state); sCancel(); rerender(); renderMenu(false); updateHeader();
     toast("「" + t.title + "」を未完了に戻した");
   }

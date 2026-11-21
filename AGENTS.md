@@ -37,7 +37,7 @@ GitHub Pages serves `index.html` at the repo root.
 - TDD: a new domain behaviour gets a failing test in `tests/test.js` first,
   then the implementation in `src/domain.js`.
 - No comments in code except important matters. Examples as diffs, not full code.
-- Verify before PR: `npm test` (32 tests) + `npm run check` (`node --check`
+- Verify before PR: `npm test` (37 tests) + `npm run check` (`node --check`
   every `src/*.js`) + headless-Chrome smoke test of the built page if the
   change touches rendering (seed `localStorage`, reload, check the list /
   complete / records / theme switch).

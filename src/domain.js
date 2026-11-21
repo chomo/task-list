@@ -87,13 +87,19 @@ export function createTask({ id, title, note = "", dueDate = "", priority = "nor
     id, title: String(title).trim().slice(0, 100), note, dueDate,
     priority: ["high", "normal", "low"].includes(priority) ? priority : "normal",
     category: String(category).trim(), tags: normalizeTags(tags),
-    status: "todo", createdAt: now.toISOString(), completedAt: "",
+    status: "todo", createdAt: now.toISOString(), updatedAt: now.toISOString(), completedAt: "",
   };
+}
+
+export function touchTask(t, now = new Date()) {
+  t.updatedAt = now instanceof Date ? now.toISOString() : String(now);
+  return t;
 }
 
 export function normalizeTask(t) {
   if (t.status !== "done" && t.status !== "doing") t.status = "todo";
   t.tags = normalizeTags(t.tags);
+  t.updatedAt = t.updatedAt || t.createdAt || new Date().toISOString();
   delete t.subtasks;
   return t;
 }
@@ -304,6 +310,7 @@ export function validateImportData(d) {
     t.tags = normalizeTags(t.tags);
     delete t.subtasks;
     t.createdAt = t.createdAt || new Date().toISOString();
+    t.updatedAt = t.updatedAt || t.createdAt;
     t.completedAt = t.completedAt || "";
   });
   const settings = (d && !Array.isArray(d) && d.settings) ? normalizeSettings(d.settings) : null;
