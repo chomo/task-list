@@ -2,7 +2,7 @@ import { THEMES, REC_FILTERS, KANBAN_COLS } from "./config.js";
 import {
   pad, todayStr, fmtDate, fmtDateTime, isOverdue, isToday, priLabel, statusLabel, esc,
   parseTags, categories, allTags, doneTasks, createTask, recRange, recFilteredDone,
-  completionStreak, taskStats, kanbanGroups, pageCount, pageSlice,
+  completionStreak, taskStats, kanbanGroups, pageCount, pageSlice, touchTask,
 } from "./domain.js";
 import { state, ui, uid } from "./state.js";
 import { saveState, parseImport } from "./storage.js";
@@ -45,6 +45,7 @@ export function renderDetail(editId) {
         '<div class="ditem"><span>カテゴリ</span><p>' + (t.category ? esc(t.category) : '<span style="color:var(--mut);font-weight:400">未設定</span>') + '</p></div>' +
         '<div class="ditem"><span>状態</span><p>' + statusLabel(t) + '</p></div>' +
         '<div class="ditem"><span>作成日</span><p>' + (t.createdAt ? esc(fmtDateTime(t.createdAt)) : '<span style="color:var(--mut);font-weight:400">—</span>') + '</p></div>' +
+        '<div class="ditem"><span>最終更新</span><p>' + (t.updatedAt ? esc(fmtDateTime(t.updatedAt)) : '<span style="color:var(--mut);font-weight:400">—</span>') + '</p></div>' +
         '<div class="ditem"><span>完了日時</span><p>' + (t.completedAt ? esc(fmtDateTime(t.completedAt)) : '<span style="color:var(--mut);font-weight:400">—（未完了）</span>') + '</p></div>' +
       '</div>' +
       '<div class="dsec"><span>メモ</span>' +
@@ -123,6 +124,7 @@ export function renderForm(editId) {
     } else {
       t.title = title.slice(0, 100); t.note = $("fNote").value; t.dueDate = $("fDue").value;
       t.priority = ui.formPriority; t.category = $("fCat").value.trim(); t.tags = tags;
+      touchTask(t);
       saveState(localStorage, state); sDecide(); toast("保存した");
       goScreen("detail", true);
     }

@@ -40,7 +40,7 @@ src/
   input.js      keyboard + touch handlers
   main.js       init wiring
 tests/
-  test.js       node --test suite for domain/storage/themes (32 tests)
+  test.js       node --test suite for domain/storage/themes (37 tests)
 package.json    { "type": "module", "test": "node --test tests/test.js" }
 AGENTS.md       guide for future AI work on this repo
 ```
