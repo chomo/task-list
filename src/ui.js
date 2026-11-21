@@ -318,12 +318,43 @@ export function syncFab(condActive) {
   }
 }
 
+export function wipeInPanel(sel) {
+  if (reducedMotion()) return;
+  const el = document.querySelector(sel);
+  if (el) el.classList.add("wipe-in");
+}
+
+export function toggleQuickPanel() {
+  if (ui.quickOpen) {
+    const el = document.querySelector(".quickadd");
+    if (reducedMotion() || !el) { ui.quickOpen = false; renderQuests(false); return; }
+    if (el.classList.contains("wipe-out")) return;
+    el.classList.remove("wipe-in"); el.classList.add("wipe-out");
+    setTimeout(() => { ui.quickOpen = false; if (ui.screen === "quests") renderQuests(false); }, 150);
+  } else {
+    ui.quickOpen = true; renderQuests(false); wipeInPanel(".quickadd");
+    const qi = $("quickTitle"); if (qi) qi.focus();
+  }
+}
+
+export function toggleSearchPanel(focusAfter) {
+  if (ui.searchOpen) {
+    const el = document.querySelector(".search-body");
+    if (reducedMotion() || !el) { ui.searchOpen = false; renderQuests(false); return; }
+    if (el.classList.contains("wipe-out")) return;
+    el.classList.remove("wipe-in"); el.classList.add("wipe-out");
+    setTimeout(() => { ui.searchOpen = false; if (ui.screen === "quests") renderQuests(false); }, 150);
+  } else {
+    ui.searchOpen = true; renderQuests(false); wipeInPanel(".search-body");
+    if (focusAfter) { const si = $("searchBox"); if (si) si.focus(); }
+  }
+}
+
 export function bindQuests() {
   const stg = $("searchToggle");
   if (stg) stg.addEventListener("click", () => {
-    ui.searchOpen = !ui.searchOpen;
     sCursor();
-    renderQuests(false);
+    toggleSearchPanel(false);
   });
   const q = $("quickTitle");
   const addQuick = () => {
@@ -367,8 +398,10 @@ export function bindQuests() {
     row.addEventListener("click", (e) => {
       const tagEl = e.target.closest("[data-tag]");
       if (tagEl) {
+        const wasSearchOpen = ui.searchOpen;
         ui.filter = "tag"; ui.tagFilter = tagEl.getAttribute("data-tag"); ui.searchOpen = true; ui.page = 1;
         sCursor(); renderQuests(false);
+        if (!wasSearchOpen) wipeInPanel(".search-body");
         return;
       }
       const actEl = e.target.closest("[data-act]");

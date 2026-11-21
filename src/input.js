@@ -1,7 +1,7 @@
 import { MENU } from "./config.js";
 import { ui } from "./state.js";
 import { sCursor, sDecide, sCancel, unlockAudio } from "./sound.js";
-import { $, renderQuests, decideMenu, onMenuMove, pageSize, visibleTasks, reducedMotion } from "./ui.js";
+import { $, renderQuests, decideMenu, onMenuMove, pageSize, visibleTasks, reducedMotion, wipeInPanel } from "./ui.js";
 import { goScreen, goBack, openDetail, toggleTask } from "./actions.js";
 
 export function focusKbRow() {
@@ -54,11 +54,12 @@ export function bindInput() {
       e.preventDefault(); ui.menuIndex = 1; sDecide(); goScreen("new", false);
     } else if (e.key === "/") {
       e.preventDefault();
+      const wasOpen2 = ui.searchOpen;
       ui.searchOpen = true;
       if (ui.screen !== "quests") {
         ui.menuIndex = 0; goScreen("quests", false);
         setTimeout(() => { const s = $("searchBox"); if (s) s.focus(); }, reducedMotion() ? 40 : 420);
-      } else { renderQuests(false); const s2 = $("searchBox"); if (s2) s2.focus(); }
+      } else { renderQuests(false); if (!wasOpen2) wipeInPanel(".search-body"); const s2 = $("searchBox"); if (s2) s2.focus(); }
     }
   });
 

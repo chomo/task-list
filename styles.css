@@ -401,6 +401,10 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan);outline:none;bo
 .search-toggle.has-cond{border-color:var(--cyan);background:linear-gradient(100deg, rgba(0,212,255,.14), rgba(2,14,36,.55) 65%)}
 .search-toggle.has-cond .st-cond{color:#fff;font-weight:700}
 .search-body[hidden]{display:none}
+.quickadd.wipe-in,.search-body.wipe-in{animation:diagWipeIn 300ms cubic-bezier(.7,0,.2,1) both}
+.quickadd.wipe-out,.search-body.wipe-out{animation:diagWipeOut 150ms cubic-bezier(.7,0,.2,1) both;pointer-events:none}
+@keyframes diagWipeIn{from{clip-path:polygon(0 0,0% 0,-14% 100%,0 100%)}to{clip-path:polygon(0 0,114% 0,100% 100%,0 100%)}}
+@keyframes diagWipeOut{from{clip-path:polygon(0 0,114% 0,100% 100%,-14% 100%)}to{clip-path:polygon(114% 0,114% 0,100% 100%,100% 100%)}}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
 .toolbar .search{flex:1 1 200px}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
@@ -574,6 +578,8 @@ footer.hints{margin-top:30px;border-top:1px solid rgba(201,168,106,.25);padding-
 footer.hints b{color:var(--gold);font-family:var(--disp);font-weight:700}
 .backrow{margin-bottom:16px}
 .backrow button{background:transparent;border:0;color:var(--cyan);font-weight:900;letter-spacing:.12em;min-height:44px;padding:8px 6px;font-size:14px}
+.backrow-bottom{margin-top:26px;padding-top:16px;border-top:1px solid rgba(201,168,106,.25)}
+.backrow-bottom button{width:100%;background:transparent;border:1px solid var(--cyan);color:var(--cyan);font-weight:900;letter-spacing:.12em;min-height:48px;padding:10px 6px;font-size:14px}
 
 /* ---------- responsive ---------- */
 @media (max-width:1023px){
