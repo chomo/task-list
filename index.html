@@ -79,6 +79,62 @@ body.theme-white .fab-search{background:#FFFFFF}
 body.theme-white .fab-add.on{background:#FFFFFF}
 body.theme-white .switch{background:rgba(10,36,80,.12)}
 body.theme-white .bgfx .diamonds{opacity:.35}
+body.theme-dark{
+  color-scheme:dark;
+  --deep:#161616; --deep2:#1E1E1E; --deep3:#121212;
+  --cyan:#8AA8C8; --cyan-dim:rgba(138,168,200,.16);
+  --ink:#E3E3E3; --mut:#9AA0A6;
+  --red:#E07A7A; --gold:#A89B83; --gold-dim:rgba(168,155,131,.38);
+  --panel:rgba(30,30,30,.94); --panel2:rgba(38,38,38,.97);
+  background:linear-gradient(var(--ang),#121212 0%,#181818 45%,#1E1E1E 80%,#232323 100%);
+}
+body.theme-dark .bgfx .lines{background:
+  repeating-linear-gradient(102deg, transparent 0 118px, rgba(255,255,255,.045) 118px 120px, transparent 120px 240px),
+  repeating-linear-gradient(102deg, transparent 0 340px, rgba(255,255,255,.03) 340px 341px, transparent 341px 680px)}
+body.theme-dark .bgfx .wave{background:radial-gradient(ellipse at center, rgba(255,255,255,.05), transparent 65%)}
+body.theme-dark .bgfx .diamonds{opacity:.22;background-image:radial-gradient(rgba(255,255,255,.14) 1px, transparent 1.6px)}
+body.theme-dark input[type=text],body.theme-dark input[type=date],body.theme-dark input[type=search],
+body.theme-dark textarea,body.theme-dark select{background:#242424;border-color:rgba(255,255,255,.22);color:#EDEDED}
+body.theme-dark .search-toggle{background:rgba(255,255,255,.04)}
+body.theme-dark .search-toggle.has-cond{background:linear-gradient(100deg, rgba(138,168,200,.16), rgba(255,255,255,.04) 65%)}
+body.theme-dark .trow{background:linear-gradient(100deg, #2A2A2A, #1F1F1F);border-color:rgba(255,255,255,.13)}
+body.theme-dark .trow.doing{background:linear-gradient(100deg, #30343A, #222222)}
+body.theme-dark .trow .pbar::before{background:rgba(255,255,255,.18)}
+body.theme-dark .trow.p-low .pbar::before{background:#7A8BA0}
+body.theme-dark .trow .ops button{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.2);color:var(--ink)}
+body.theme-dark .trow .ops .done-btn{background:var(--cyan);border-color:var(--cyan);color:#121212}
+body.theme-dark .trow .ops .start-btn{background:var(--gold);border-color:var(--gold);color:#121212}
+body.theme-dark .chip.on{background:#E8E8E8;color:#121212;border-color:#E8E8E8}
+body.theme-dark .cell{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12)}
+body.theme-dark .progress{background:rgba(255,255,255,.12)}
+body.theme-dark .progress i{background:linear-gradient(90deg,#5F7A99,var(--cyan))}
+body.theme-dark .bars .bar{background:linear-gradient(180deg,var(--cyan),#4A6076)}
+body.theme-dark .bars .bar.zero{background:rgba(255,255,255,.12)}
+body.theme-dark .dnote{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.14)}
+body.theme-dark .dsubs li{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12)}
+body.theme-dark .badge-pri.p-normal{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}
+body.theme-dark .seg button.on.p-low{background:#7A8BA0;border-color:#7A8BA0}
+body.theme-dark .status .pat{border-color:rgba(255,255,255,.16)}
+body.theme-dark .pat-0{background:repeating-linear-gradient(115deg, rgba(255,255,255,.07) 0 14px, transparent 14px 42px)}
+body.theme-dark .pat-1{background:repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0 2px, transparent 2px 26px),repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 2px, transparent 2px 26px)}
+body.theme-dark .pat-2{background:radial-gradient(circle at 22% 50%, rgba(255,255,255,.10) 0 34px, transparent 35px),radial-gradient(circle at 62% 50%, rgba(255,255,255,.07) 0 54px, transparent 55px),radial-gradient(circle at 88% 50%, rgba(255,255,255,.06) 0 22px, transparent 23px)}
+body.theme-dark .pat-3{background:repeating-linear-gradient(45deg, rgba(255,255,255,.06) 0 10px, transparent 10px 30px),repeating-linear-gradient(-45deg, rgba(255,255,255,.05) 0 10px, transparent 10px 30px)}
+body.theme-dark .pat-4{background:conic-gradient(from 200deg at 70% 40%, rgba(255,255,255,.09), transparent 30%, rgba(255,255,255,.06) 55%, transparent 80%)}
+body.theme-dark .statbox{background:linear-gradient(90deg, rgba(255,255,255,.06), transparent)}
+body.theme-dark .statbox.gold{background:linear-gradient(90deg, rgba(168,155,131,.10), transparent)}
+body.theme-dark .statbox.red{background:linear-gradient(90deg, rgba(224,122,122,.10), transparent)}
+body.theme-dark .mitem.sel .en{color:#121212}
+body.theme-dark .mitem.sel .ja{color:#2A2A2A}
+body.theme-dark .mitem.sel::before{background:#121212}
+body.theme-dark .mitem.sel .sub{color:#242424}
+body.theme-dark .mitem .badge{background:#121212}
+body.theme-dark .mitem .band{background:linear-gradient(100deg, rgba(138,168,200,.95), rgba(138,168,200,.25) 70%, transparent)}
+body.theme-dark .fab-search{background:#2A2A2A}
+body.theme-dark .fab-add.on{background:#2A2A2A}
+body.theme-dark .fab-search.has-cond::after{border-color:#1E1E1E}
+body.theme-dark .toast{background:#2D2D2D}
+body.theme-dark .overlay{background:rgba(0,0,0,.8)}
+body.theme-dark .switch{background:rgba(255,255,255,.10)}
 button,[role="button"],select,summary,input:not([type="checkbox"]){min-height:2.25rem}
 button{font-family:inherit;cursor:pointer}
 :focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
@@ -511,7 +567,11 @@ var MENU = [
   { id:"system",   en:"SYSTEM",   ja:"設定",         desc:"音・演出・データを管理する" }
 ];
 var state = { tasks: [], settings: { sound:true, volume:2, motion:true, theme:"dark" } };
-function normalizeTheme(v){ return (v === "white" || v === "light") ? "white" : "dark"; }
+function normalizeTheme(v){
+  if (v === "white" || v === "light") return "white";
+  if (v === "blue" || v === "midnight") return "blue";
+  return "dark";
+}
 var ui = {
   screen: "quests", menuIndex: 0, menuFocus: false, menuOpen: false,
   filter: "open", sort: "due", catFilter: "", search: "", searchOpen: false, quickOpen: false,
@@ -539,6 +599,11 @@ function load(){
       ["sound","volume","motion","theme"].forEach(function(k){
         if (d.settings[k] !== undefined) state.settings[k] = d.settings[k];
       });
+      var migrated = normalizeTheme(state.settings.theme);
+      if (migrated !== state.settings.theme) {
+        state.settings.theme = migrated;
+        try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e){}
+      }
     }
   } catch(e){}
 }
@@ -625,6 +690,8 @@ function applySettings(){
   state.settings.theme = normalizeTheme(state.settings.theme);
   document.body.classList.toggle("reduced", reducedMotion());
   document.body.classList.toggle("theme-white", state.settings.theme === "white");
+  document.body.classList.toggle("theme-dark", state.settings.theme === "dark");
+  document.body.classList.toggle("theme-blue", state.settings.theme === "blue");
 }
 function updateHeader(){
   var open = openTasks().length, done = doneTasks().length, total = state.tasks.length;
@@ -1392,8 +1459,9 @@ function renderSystem(){
         return '<button type="button" data-vol="' + v + '"' + (s.volume === v ? ' class="on"' : "") + ">" + ["","小","中","大"][v] + "</button>";
       }).join("") + "</span></div>" +
     '<div class="setrow"><div class="t"><b>モーション</b><span>OFF でワイプとゆらぎを止め、フェードに置き換える</span></div>' + sw("motion", s.motion) + "</div>" +
-    '<div class="setrow"><div class="t"><b>テーマ</b><span>ダーク（デフォルト）／ホワイト（白基調）</span></div>' +
+    '<div class="setrow"><div class="t"><b>テーマ</b><span>ブルー（ディープブルー基調）／ダーク（デフォルト）／ホワイト（白基調）</span></div>' +
       '<span class="seg" id="themeSeg">' +
+        '<button type="button" data-theme="blue"' + (s.theme === "blue" ? ' class="on"' : "") + ">ブルー</button>" +
         '<button type="button" data-theme="dark"' + (s.theme === "dark" ? ' class="on"' : "") + ">ダーク</button>" +
         '<button type="button" data-theme="white"' + (s.theme === "white" ? ' class="on"' : "") + ">ホワイト</button>" +
       "</span></div>" +
