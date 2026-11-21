@@ -5,13 +5,16 @@ JRPG-style task list. Daily task management as a command menu, inspired by the m
 ## Features
 
 - Main menu (QUESTS / NEW QUEST / SCHEDULE / RECORDS / SYSTEM) with diagonal cyan selection band, wipe transitions, and synthesized Web Audio sounds
-- Tasks (quests): add, edit, complete, delete, subtasks, priorities, due dates, categories
-- Detail screen is read-only (status, priority, due date, category, created/completed dates, note, subtask progress) with an Edit button; editing happens on a separate form screen that returns to the detail view after saving
+- Tasks (quests): add, edit, complete, delete, tags, priorities, due dates, categories
+- Detail screen is read-only (status, priority, due date, category, created/completed dates, note, tags) with an Edit button; editing happens on a separate form screen that returns to the detail view after saving
+- Tags: multiple tags per task, free input with existing tags as suggestions; filter the list by tag
 - Priority badge (高 / 通常 / 低) on every task list row and calendar daily list
 - Theme: dark (default, generic dark mode) / blue (original deep blue) / white / yellow (bright yellow-based, amber diagonal band, gold accent, dark brown text) / red (red-based dark theme, deep crimson background, red diagonal band), switchable in SYSTEM, saved in localStorage; old dark migrates to dark, old blue/midnight migrates to blue
 - Start button marks a task as in progress (DOING)
 - Filters, incremental search, sorting (due date / priority / created / manual drag)
 - Month calendar (no week view); RECORDS shows a list of completed tasks, default filter today (today / yesterday / this week / this month / all), no daily graph
+- Pagination: 10 items per page on mobile, 30 on PC (task list and RECORDS)
+- WebGPU background: cherry-blossom petals and twinkling stardust drift across the background, tinted to the active theme (falls back to the CSS look where WebGPU is unavailable)
 - Settings: sound, motion, data management, JSON export/import
 - Default state: task list open, menu and search collapsed
 - Mobile: header (date / achievement) hidden; quick-add and search live behind floating "+" and magnifier buttons so the list fills the screen
