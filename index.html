@@ -71,7 +71,6 @@ body.theme-white .progress{background:rgba(10,36,80,.12)}
 body.theme-white .bars .bar.zero{background:rgba(10,36,80,.14)}
 body.theme-white .status .pat span{color:rgba(10,36,80,.65)}
 body.theme-white .dnote{background:rgba(255,255,255,.85);border-color:rgba(90,107,140,.3)}
-body.theme-white .dsubs li{background:rgba(255,255,255,.8);border-color:rgba(90,107,140,.25);color:#10243E}
 body.theme-white .badge-pri.p-normal{background:rgba(10,36,80,.07);border-color:rgba(90,107,140,.5);color:#10243E}
 body.theme-white .overlay{background:rgba(226,235,252,.86)}
 body.theme-white .toast{background:#FFFFFF;color:#0A2450}
@@ -125,7 +124,6 @@ body.theme-yellow .progress{background:rgba(74,53,0,.13)}
 body.theme-yellow .bars .bar.zero{background:rgba(74,53,0,.15)}
 body.theme-yellow .status .pat span{color:rgba(74,53,0,.65)}
 body.theme-yellow .dnote{background:rgba(255,255,248,.9);border-color:rgba(138,109,31,.3)}
-body.theme-yellow .dsubs li{background:rgba(255,255,248,.85);border-color:rgba(138,109,31,.25);color:#3D3205}
 body.theme-yellow .badge-pri.p-normal{background:rgba(74,53,0,.07);border-color:rgba(138,109,31,.5);color:#3D3205}
 body.theme-yellow .badge-pri.p-low{background:#A8842C;border-color:#A8842C}
 body.theme-yellow .seg button.on.p-low{background:#A8842C;border-color:#A8842C}
@@ -174,7 +172,6 @@ body.theme-dark .progress i{background:linear-gradient(90deg,#5F7A99,var(--cyan)
 body.theme-dark .bars .bar{background:linear-gradient(180deg,var(--cyan),#4A6076)}
 body.theme-dark .bars .bar.zero{background:rgba(255,255,255,.12)}
 body.theme-dark .dnote{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.14)}
-body.theme-dark .dsubs li{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12)}
 body.theme-dark .badge-pri.p-normal{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}
 body.theme-dark .seg button.on.p-low{background:#7A8BA0;border-color:#7A8BA0}
 body.theme-dark .status .pat{border-color:rgba(255,255,255,.16)}
@@ -231,7 +228,6 @@ body.theme-red .progress i{background:linear-gradient(90deg,#C22E42,var(--cyan))
 body.theme-red .bars .bar{background:linear-gradient(180deg,var(--cyan),#A01E30)}
 body.theme-red .bars .bar.zero{background:rgba(255,255,255,.12)}
 body.theme-red .dnote{background:rgba(28,5,8,.6);border-color:rgba(255,160,160,.25)}
-body.theme-red .dsubs li{background:rgba(28,5,8,.5);border-color:rgba(255,160,160,.18)}
 body.theme-red .badge-pri.p-normal{background:rgba(255,255,255,.1);border-color:rgba(255,160,160,.5)}
 body.theme-red .badge-pri.p-low{background:#C97B84;border-color:#C97B84;color:#2A0508}
 body.theme-red .seg button.on.p-low{background:#C97B84;border-color:#C97B84;color:#2A0508}
@@ -487,13 +483,11 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan);outline:none;bo
 .dsec>span{display:block;font-size:12px;letter-spacing:.22em;color:var(--gold);font-weight:700;margin-bottom:8px}
 .dnote{background:rgba(2,14,36,.6);border:1px solid rgba(143,168,216,.25);padding:14px 16px;font-size:14px;line-height:1.8;color:var(--ink);overflow-wrap:anywhere;white-space:pre-wrap;min-height:52px}
 .dnote.dim{color:var(--mut)}
-.dsubs{list-style:none;margin:0;padding:0}
-.dsubs li{display:flex;gap:10px;align-items:center;padding:9px 12px;margin-bottom:6px;background:rgba(2,14,36,.5);border:1px solid rgba(143,168,216,.18);font-size:14px;color:#fff;overflow-wrap:anywhere}
-.dsubs li .mark{flex:none;width:22px;height:22px;min-height:22px;border:2px solid var(--cyan);transform:rotate(45deg) scale(.68);position:relative}
-.dsubs li.done{color:var(--mut)}
-.dsubs li.done .mark{background:var(--cyan)}
-.dsubs li.done .sttl{text-decoration:line-through}
-.dsubs li .sdone{flex:none;margin-left:auto;font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--cyan);white-space:nowrap}
+.tagchip{display:inline-block;border:1px solid var(--gold-dim);color:var(--gold);background:rgba(201,168,106,.08);
+  font-size:11px;font-weight:700;padding:1px 8px;letter-spacing:.04em;transform:skewX(-8deg);white-space:nowrap}
+.tagchip.clickable{cursor:pointer}
+.dtags{display:flex;gap:8px;flex-wrap:wrap}
+.dtags .tagchip{font-size:13px;padding:4px 12px}
 .dempty{color:var(--mut);font-size:13px;border:1px dashed rgba(143,168,216,.35);padding:12px 14px}
 .dacts{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px;align-items:center}
 @media (max-width:639px){ .dgrid{grid-template-columns:1fr 1fr} .dtitle{font-size:19px} }
@@ -504,7 +498,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan);outline:none;bo
 .trow .ops .done-btn:hover{filter:brightness(1.12)}
 .trow .ops .start-btn{background:var(--gold);border-color:var(--gold);color:#02122E;font-weight:900;letter-spacing:.06em;padding:4px 16px;font-size:13px}
 .trow .ops .start-btn:hover{filter:brightness(1.12)}
-.trow .subprog{font-size:11px;color:var(--mut)}
 .trow .stamp{position:absolute;inset:0;display:none;align-items:center;justify-content:center;z-index:3;pointer-events:none}
 .trow.completing .stamp{display:flex}
 .trow .stamp::before{content:"";position:absolute;top:0;bottom:0;width:34%;left:-40%;
@@ -521,12 +514,18 @@ input:focus,textarea:focus,select:focus{border-color:var(--cyan);outline:none;bo
 .empty{border:1px dashed rgba(143,168,216,.4);padding:34px 20px;text-align:center;color:var(--mut)}
 .empty b{display:block;font-family:var(--serif);font-size:19px;color:#fff;margin-bottom:6px;letter-spacing:.1em}
 
-/* subtask editor */
-.subedit .srow{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-.subedit .srow input[type=text]{flex:1}
-.subedit .srow label{display:flex;align-items:center;gap:6px;min-height:44px;padding:0 6px;color:var(--mut);font-size:13px}
-.subedit .srow input[type=checkbox]{width:22px;height:22px;accent-color:var(--cyan)}
-.subedit .srow .del{background:transparent;border:1px solid rgba(255,59,92,.5);color:var(--red);min-height:40px;padding:4px 12px}
+/* ---------- pager ---------- */
+.pager{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:18px}
+.pager button{border:1px solid rgba(143,168,216,.5);background:transparent;color:var(--ink);padding:7px 13px;min-height:38px;font-size:13px;font-weight:700;transform:skewX(-8deg)}
+.pager button span{display:inline-block;transform:skewX(8deg)}
+.pager button.on{background:#fff;color:#02122E;border-color:#fff}
+.pager button:disabled{opacity:.35;cursor:not-allowed}
+.pager .ellipsis{color:var(--mut);padding:0 2px}
+.pager .pager-info{color:var(--mut);font-size:12px;letter-spacing:.08em;margin-left:4px}
+body.theme-white .pager button.on{background:#0A2450;color:#fff;border-color:#0A2450}
+body.theme-dark .pager button.on{background:#E8E8E8;color:#121212;border-color:#E8E8E8}
+body.theme-yellow .pager button.on{background:#4A3500;color:#FFF6C8;border-color:#4A3500}
+body.theme-red .pager button.on{background:#FFE9E9;color:#4A0A12;border-color:#FFE9E9}
 
 /* ---------- calendar ---------- */
 .calhead{display:flex;align-items:center;gap:16px;margin-bottom:14px}
@@ -621,6 +620,15 @@ footer.hints b{color:var(--gold);font-family:var(--disp);font-weight:700}
 }
 @media (hover:none){ footer.hints{display:none} }
 
+/* ---------- WebGPU flair (enhancement only; absent without WebGPU) ---------- */
+.bgfx .gpu-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity 900ms ease}
+body.gpu-on .bgfx .gpu-canvas{opacity:.85}
+body.gpu-on .bgfx .wave{opacity:.55}
+#burstCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:65}
+body.gpu-on .wipe i{box-shadow:0 0 34px rgba(0,212,255,.65)}
+body.gpu-on .trow.completing{box-shadow:0 0 0 1px rgba(0,212,255,.5),0 0 28px rgba(0,212,255,.35)}
+body.gpu-on .panel{box-shadow:0 0 42px rgba(0,0,0,.18),0 0 24px rgba(0,212,255,.06)}
+
 /* ---------- reduced motion ---------- */
 body.reduced *,body.reduced *::before,body.reduced *::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
 body.reduced .bgfx .wave{animation:none}
@@ -631,12 +639,14 @@ body.reduced .mitem.enter{animation:fadein 150ms ease}
 </head>
 <body>
 <div class="bgfx" aria-hidden="true">
+  <canvas class="gpu-canvas" id="gpuCanvas"></canvas>
   <div class="lines" id="bgLines"></div>
   <div class="wave w1"></div><div class="wave w2"></div>
   <div class="diamonds"></div>
 </div>
 <div class="frame" aria-hidden="true"></div>
 <div class="wipe" id="wipe" aria-hidden="true"><i></i><i></i></div>
+<canvas id="burstCanvas" aria-hidden="true"></canvas>
 
 <div class="app">
   <header class="top">
@@ -699,9 +709,9 @@ function normalizeTheme(v){
 }
 var ui = {
   screen: "quests", menuIndex: 0, menuFocus: false, menuOpen: false,
-  filter: "open", sort: "due", catFilter: "", search: "", searchOpen: false, quickOpen: false,
+  filter: "open", sort: "due", catFilter: "", tagFilter: "", search: "", searchOpen: false, quickOpen: false,
   showDone: false, kbIndex: 0, editId: null, calCursor: null, calSel: null,
-  formPriority: "normal", formSubs: [], warnedFor: "", recFilter: "today"
+  formPriority: "normal", warnedFor: "", recFilter: "today", page: 1, recPage: 1
 };
 var audioCtx = null, toastTimer = null;
 
@@ -718,6 +728,8 @@ function load(){
       state.tasks = d.tasks;
       state.tasks.forEach(function(t){
         if (t.status !== "done" && t.status !== "doing") t.status = "todo";
+        t.tags = normalizeTags(t.tags);
+        delete t.subtasks;
       });
     }
     if (d && d.settings) {
@@ -807,6 +819,65 @@ function categories(){
   var seen = {}, out = [];
   state.tasks.forEach(function(t){ if (t.category && !seen[t.category]) { seen[t.category] = 1; out.push(t.category); } });
   return out;
+}
+function normalizeTags(v){
+  if (!Array.isArray(v)) return [];
+  var seen = {}, out = [];
+  v.forEach(function(g){
+    if (typeof g !== "string") return;
+    g = g.trim();
+    if (g && !seen[g]) { seen[g] = 1; out.push(g); }
+  });
+  return out;
+}
+function parseTags(s){
+  return normalizeTags(String(s == null ? "" : s).split(/[、,，・\s]+/));
+}
+function allTags(){
+  var seen = {}, out = [];
+  state.tasks.forEach(function(t){
+    (t.tags || []).forEach(function(g){ if (g && !seen[g]) { seen[g] = 1; out.push(g); } });
+  });
+  return out;
+}
+function pageSize(){ return window.innerWidth <= 639 ? 10 : 30; }
+function pagerHtml(page, pages, total, attr){
+  if (pages <= 1) return "";
+  var nums = [];
+  if (pages <= 7) { for (var i = 1; i <= pages; i++) nums.push(i); }
+  else {
+    nums = [1];
+    if (page > 3) nums.push("…");
+    for (var j = Math.max(2, page - 1); j <= Math.min(pages - 1, page + 1); j++) nums.push(j);
+    if (page < pages - 2) nums.push("…");
+    nums.push(pages);
+  }
+  var h = '<nav class="pager" aria-label="ページ切り替え">' +
+    '<button type="button" ' + attr + '="prev"' + (page <= 1 ? " disabled" : "") + '><span>◀ 前へ</span></button>';
+  nums.forEach(function(n){
+    if (n === "…") h += '<span class="ellipsis">…</span>';
+    else h += '<button type="button" ' + attr + '="' + n + '"' + (n === page ? ' class="on" aria-current="page"' : "") + '><span>' + n + "</span></button>";
+  });
+  h += '<button type="button" ' + attr + '="next"' + (page >= pages ? " disabled" : "") + '><span>次へ ▶</span></button>' +
+    '<span class="pager-info">' + total + "件 — " + page + " / " + pages + " ページ</span></nav>";
+  return h;
+}
+function bindPager(attr, getPage, setPage, rerender){
+  Array.prototype.forEach.call(document.querySelectorAll("[" + attr + "]"), function(el){
+    el.addEventListener("click", function(){
+      var v = el.getAttribute(attr);
+      var p = getPage();
+      if (v === "prev") p -= 1;
+      else if (v === "next") p += 1;
+      else p = parseInt(v, 10) || 1;
+      setPage(p); sCursor(); rerender();
+    });
+  });
+}
+function tagChips(t, clickable){
+  return (t.tags || []).map(function(g){
+    return '<span class="tagchip' + (clickable ? " clickable" : "") + '" data-tag="' + esc(g) + '">#' + esc(g) + "</span>";
+  }).join("");
 }
 function reducedMotion(){
   return !state.settings.motion || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -986,10 +1057,12 @@ function visibleTasks(){
   else if (ui.filter === "today") list = list.filter(function(t){ return t.status !== "done" && t.dueDate === t0; });
   else if (ui.filter === "over") list = list.filter(isOverdue);
   else if (ui.filter === "cat") list = list.filter(function(t){ return t.category === ui.catFilter; });
+  else if (ui.filter === "tag") list = list.filter(function(t){ return (t.tags || []).indexOf(ui.tagFilter) >= 0; });
   if (ui.search) {
     var q = ui.search.toLowerCase();
     list = list.filter(function(t){
-      return t.title.toLowerCase().indexOf(q) >= 0 || (t.note || "").toLowerCase().indexOf(q) >= 0;
+      return t.title.toLowerCase().indexOf(q) >= 0 || (t.note || "").toLowerCase().indexOf(q) >= 0 ||
+        (t.category || "").toLowerCase().indexOf(q) >= 0 || (t.tags || []).join(" ").toLowerCase().indexOf(q) >= 0;
     });
   }
   if (ui.sort === "manual") return list;
@@ -1017,20 +1090,16 @@ function searchConditions(){
   var parts = [];
   if (ui.search) parts.push("検索「" + ui.search + "」");
   if (ui.filter !== "open") {
-    var fmap = { all: "全て", today: "今日", over: "期限切れ", cat: "カテゴリ別" };
+    var fmap = { all: "全て", today: "今日", over: "期限切れ", cat: "カテゴリ別", tag: "タグ別" };
     parts.push("表示：" + (fmap[ui.filter] || ui.filter));
     if (ui.filter === "cat" && ui.catFilter) parts.push("カテゴリ：" + ui.catFilter);
+    if (ui.filter === "tag" && ui.tagFilter) parts.push("タグ：" + ui.tagFilter);
   }
   if (ui.sort !== "due") {
     var smap = { priority: "優先度順", created: "作成順", manual: "手動（ドラッグ）" };
     parts.push("並び：" + (smap[ui.sort] || ui.sort));
   }
   return parts;
-}
-function subInfo(t){
-  if (!t.subtasks || !t.subtasks.length) return "";
-  var d = t.subtasks.filter(function(s){ return s.done; }).length;
-  return '<span class="subprog">サブ ' + d + "/" + t.subtasks.length + "</span>";
 }
 function rowHtml(t, idx){
   var over = isOverdue(t), today = isToday(t) && t.status !== "done";
@@ -1042,7 +1111,7 @@ function rowHtml(t, idx){
   if (over) meta += '<span class="badge-over">OVERDUE</span>';
   if (today) meta += '<span class="badge-today">TODAY</span>';
   if (t.category) meta += '<span class="cat">' + esc(t.category) + "</span>";
-  meta += subInfo(t);
+  meta += tagChips(t, true);
   var mv = ui.sort === "manual" && ui.filter !== "cat"
     ? '<button type="button" class="mv" data-act="up" aria-label="上へ">▲</button><button type="button" class="mv" data-act="down" aria-label="下へ">▼</button>' : "";
   var opsBtns = "";
@@ -1069,9 +1138,20 @@ function renderQuests(anim){
   var doneList = list.filter(function(t){ return t.status === "done"; });
   var overList = openList.filter(isOverdue);
   var restList = openList.filter(function(t){ return !isOverdue(t); });
-  if (ui.kbIndex >= openList.length + doneList.length) ui.kbIndex = Math.max(0, openList.length + doneList.length - 1);
+  var flat = [];
+  overList.forEach(function(t){ flat.push({ t: t, g: "over" }); });
+  restList.forEach(function(t){ flat.push({ t: t, g: "rest" }); });
+  if (ui.showDone) doneList.forEach(function(t){ flat.push({ t: t, g: "done" }); });
+  if (ui.kbIndex >= flat.length) ui.kbIndex = Math.max(0, flat.length - 1);
+  var psize = pageSize();
+  var pages = Math.max(1, Math.ceil(flat.length / psize));
+  if (ui.page > pages) ui.page = pages;
+  if (ui.page < 1) ui.page = 1;
+  var pstart = (ui.page - 1) * psize;
+  var slice = flat.slice(pstart, pstart + psize);
   var cats = categories();
-  var chips = [["open","未完了"],["all","全て"],["today","今日"],["over","期限切れ"],["cat","カテゴリ別"]]
+  var tagOpts = allTags();
+  var chips = [["open","未完了"],["all","全て"],["today","今日"],["over","期限切れ"],["cat","カテゴリ別"],["tag","タグ別"]]
     .map(function(c){
       return '<button type="button" class="chip' + (ui.filter === c[0] ? " on" : "") + '" data-filter="' + c[0] + '"><span>' + c[1] + "</span></button>";
     }).join("");
@@ -1086,18 +1166,22 @@ function renderQuests(anim){
         : '<span class="st-cond st-none">条件なし — 検索・フィルタ・並び替え</span>') +
       '<span class="st-state">' + (ui.searchOpen ? "閉じる" : "開く") + ' <span aria-hidden="true">' + (ui.searchOpen ? "▲" : "▼") + "</span></span>" +
     "</button>";
-  if (overList.length) {
-    rows += '<p class="grouplabel">OVERDUE — 期限超過</p>' + overList.map(function(t){ return rowHtml(t, idx++); }).join("");
-  }
-  if (restList.length) {
-    rows += (overList.length ? '<p class="grouplabel normal">TASKS — タスク</p>' : "") + restList.map(function(t){ return rowHtml(t, idx++); }).join("");
-  }
+  idx = pstart;
+  var lastG = "";
+  slice.forEach(function(it){
+    if (it.g !== lastG) {
+      if (it.g === "over") rows += '<p class="grouplabel">OVERDUE — 期限超過</p>';
+      else if (it.g === "rest" && overList.length) rows += '<p class="grouplabel normal">TASKS — タスク</p>';
+      lastG = it.g;
+    }
+    rows += rowHtml(it.t, idx++);
+  });
   var doneHtml = "";
   if (doneList.length) {
     doneHtml = '<div class="donehead"><span>完了済み — ' + doneList.length + '件</span>' +
-      '<button type="button" id="doneToggle">' + (ui.showDone ? "畳む" : "展開する") + "</button></div>" +
-      (ui.showDone ? doneList.map(function(t){ return rowHtml(t, idx++); }).join("") : "");
+      '<button type="button" id="doneToggle">' + (ui.showDone ? "畳む" : "展開する") + "</button></div>";
   }
+  var pager = pagerHtml(ui.page, pages, flat.length, "data-qpage");
   $("stage").innerHTML =
     '<div class="panel' + (anim ? " slidein" : "") + '">' +
       '<h2><span class="en">TASKS</span>タスク一覧</h2><div class="gold-rule"></div>' +
@@ -1106,7 +1190,7 @@ function renderQuests(anim){
       searchToggleHtml +
       '<div class="search-body" id="searchBody"' + (ui.searchOpen ? "" : " hidden") + '>' +
       '<div class="toolbar">' +
-        '<input type="search" class="search" id="searchBox" placeholder="検索（タイトル・メモ） — / キー" value="' + esc(ui.search) + '" />' +
+        '<input type="search" class="search" id="searchBox" placeholder="検索（タイトル・メモ・タグ） — / キー" value="' + esc(ui.search) + '" />' +
         '<select id="sortSel" aria-label="並び替え">' +
           [["due","期限順"],["priority","優先度順"],["created","作成順"],["manual","手動（ドラッグ）"]].map(function(o){
             return '<option value="' + o[0] + '"' + (ui.sort === o[0] ? " selected" : "") + ">" + o[1] + "</option>";
@@ -1117,10 +1201,15 @@ function renderQuests(anim){
               return '<option value="' + esc(c) + '"' + (ui.catFilter === c ? " selected" : "") + ">" + esc(c) + "</option>";
             }).join("") : '<option value="">（カテゴリなし）</option>') + "</select>"
           : "") +
+        (ui.filter === "tag"
+          ? '<select id="tagSel" aria-label="タグ">' + (tagOpts.length ? tagOpts.map(function(c){
+              return '<option value="' + esc(c) + '"' + (ui.tagFilter === c ? " selected" : "") + ">#" + esc(c) + "</option>";
+            }).join("") : '<option value="">（タグなし）</option>') + "</select>"
+          : "") +
       "</div>" +
       '<div class="chips">' + chips + "</div>" +
       "</div>" +
-      (list.length ? rows + doneHtml
+      (list.length ? rows + doneHtml + pager
         : '<div class="empty"><b>タスクはない</b>条件に合うタスクが見つからない。NEW TASK から追加できる。</div>') +
     "</div>";
   syncFab(condActive);
@@ -1152,34 +1241,48 @@ function bindQuests(){
   var addQuick = function(){
     var v = q.value.trim(); if (!v) return;
     state.tasks.unshift({ id: uid(), title: v.slice(0,100), note: "", dueDate: "", priority: "normal",
-      category: "", status: "todo", subtasks: [], createdAt: new Date().toISOString(), completedAt: "" });
-    save(); sDecide(); ui.kbIndex = 0; ui.quickOpen = false; renderQuests(false); renderMenu(false); updateHeader();
+      category: "", tags: [], status: "todo", createdAt: new Date().toISOString(), completedAt: "" });
+    save(); sDecide(); ui.kbIndex = 0; ui.page = 1; ui.quickOpen = false; renderQuests(false); renderMenu(false); updateHeader();
     toast("タスクを追加した");
   };
   q.addEventListener("keydown", function(e){ if (e.key === "Enter") addQuick(); });
   $("quickBtn").addEventListener("click", addQuick);
   var sb = $("searchBox");
   sb.addEventListener("input", function(){
-    ui.search = sb.value; ui.kbIndex = 0;
+    ui.search = sb.value; ui.kbIndex = 0; ui.page = 1;
     var pos = sb.selectionStart;
     renderQuests(false);
     var n = $("searchBox"); n.focus(); try { n.setSelectionRange(pos, pos); } catch(e){}
   });
-  $("sortSel").addEventListener("change", function(){ ui.sort = this.value; renderQuests(false); });
+  $("sortSel").addEventListener("change", function(){ ui.sort = this.value; ui.page = 1; renderQuests(false); });
   var cs = $("catSel");
-  if (cs) cs.addEventListener("change", function(){ ui.catFilter = this.value; renderQuests(false); });
+  if (cs) cs.addEventListener("change", function(){ ui.catFilter = this.value; ui.page = 1; renderQuests(false); });
+  var ts = $("tagSel");
+  if (ts) ts.addEventListener("change", function(){ ui.tagFilter = this.value; ui.page = 1; renderQuests(false); });
   Array.prototype.forEach.call(document.querySelectorAll("[data-filter]"), function(el){
     el.addEventListener("click", function(){
       ui.filter = el.getAttribute("data-filter");
       if (ui.filter === "cat" && !ui.catFilter) ui.catFilter = categories()[0] || "";
+      if (ui.filter === "tag" && !ui.tagFilter) ui.tagFilter = allTags()[0] || "";
+      ui.page = 1;
       sCursor(); renderQuests(false);
     });
   });
   var dt = $("doneToggle");
-  if (dt) dt.addEventListener("click", function(){ ui.showDone = !ui.showDone; sCursor(); renderQuests(false); });
+  if (dt) dt.addEventListener("click", function(){ ui.showDone = !ui.showDone; ui.page = 1; sCursor(); renderQuests(false); });
+  bindPager("data-qpage",
+    function(){ return ui.page; },
+    function(p){ ui.page = p; },
+    function(){ renderQuests(false); });
   Array.prototype.forEach.call(document.querySelectorAll(".trow"), function(row){
     var id = row.getAttribute("data-id");
     row.addEventListener("click", function(e){
+      var tagEl = e.target.closest("[data-tag]");
+      if (tagEl) {
+        ui.filter = "tag"; ui.tagFilter = tagEl.getAttribute("data-tag"); ui.searchOpen = true; ui.page = 1;
+        sCursor(); renderQuests(false);
+        return;
+      }
       var actEl = e.target.closest("[data-act]");
       var act = actEl ? actEl.getAttribute("data-act") : "open";
       if (act === "toggle") { toggleTask(id, row); }
@@ -1238,6 +1341,11 @@ function toggleTask(id, rowEl){
   if (!t) return;
   var rerender = function(){ rerenderCurrent(); };
   if (t.status !== "done") {
+    if (!reducedMotion() && typeof spawnBurst === "function") {
+      var bx = 0.5, by = 0.42;
+      if (rowEl) { var rr = rowEl.getBoundingClientRect(); bx = (rr.left + rr.width / 2) / Math.max(1, window.innerWidth); by = (rr.top + rr.height / 2) / Math.max(1, window.innerHeight); }
+      spawnBurst(bx, by);
+    }
     var finish = function(){
       t.status = "done"; t.completedAt = new Date().toISOString();
       save(); rerender(); renderMenu(false); updateHeader();
@@ -1273,8 +1381,6 @@ function renderDetail(editId){
   var t = editId ? state.tasks.filter(function(x){ return x.id === editId; })[0] : null;
   if (!t) { goScreen("quests", true); return; }
   var over = isOverdue(t), today = isToday(t) && t.status !== "done";
-  var subs = t.subtasks || [];
-  var subDone = subs.filter(function(s){ return s.done; }).length;
   var dueHtml = t.dueDate
     ? esc(fmtDate(t.dueDate)) + (over ? ' <span class="badge-over">OVERDUE</span>' : today ? ' <span class="badge-today">TODAY</span>' : "")
     : '<span style="color:var(--mut);font-weight:400">未設定</span>';
@@ -1309,12 +1415,10 @@ function renderDetail(editId){
       '</div>' +
       '<div class="dsec"><span>メモ</span>' +
         (t.note ? '<div class="dnote">' + esc(t.note) + '</div>' : '<div class="dnote dim">（メモなし）</div>') + '</div>' +
-      '<div class="dsec"><span>サブタスク — ' + subDone + ' / ' + subs.length + ' 完了</span>' +
-        (subs.length
-          ? '<ul class="dsubs">' + subs.map(function(s){
-              return '<li class="' + (s.done ? "done" : "") + '"><span class="mark" aria-hidden="true"></span><span class="sttl">' + esc(s.title) + '</span>' + (s.done ? '<span class="sdone">済</span>' : "") + '</li>';
-            }).join("") + '</ul>'
-          : '<div class="dempty">サブタスクはない</div>') + '</div>' +
+      '<div class="dsec"><span>タグ</span>' +
+        ((t.tags && t.tags.length)
+          ? '<div class="dtags">' + tagChips(t, false) + '</div>'
+          : '<div class="dempty">タグはない</div>') + '</div>' +
       '<div class="dacts">' +
         '<button type="button" class="btn" id="editBtn">編集</button>' +
         acts +
@@ -1337,7 +1441,6 @@ function renderForm(editId){
   var t = editId ? state.tasks.filter(function(x){ return x.id === editId; })[0] : null;
   if (editId && !t) { goScreen("quests", true); return; }
   ui.formPriority = t ? t.priority : "normal";
-  ui.formSubs = t ? t.subtasks.map(function(s){ return { id: s.id, title: s.title, done: s.done }; }) : [];
   var isNew = !t;
   $("stage").innerHTML =
     '<div class="panel slidein">' +
@@ -1355,15 +1458,13 @@ function renderForm(editId){
             return '<button type="button" data-pri="' + p[0] + '" class="p-' + p[0] + (ui.formPriority === p[0] ? " on" : "") + '">' + p[1] + "</button>";
           }).join("") + "</span></label>" +
       "</div>" +
-      '<label class="f"><span>サブタスク</span></label>' +
-      '<div class="subedit" id="subEdit"></div>' +
-      '<button type="button" class="btn ghost small" id="subAdd">＋ サブタスク追加</button>' +
+      '<label class="f"><span>タグ（複数可 — カンマ・空白で区切る、入力済みタグが候補に出る）</span><input type="text" id="fTags" list="tagList" value="' + esc(t && t.tags ? t.tags.join(", ") : "") + '" placeholder="例：仕事, 買い物, 急ぎ" />' +
+      '<datalist id="tagList">' + allTags().map(function(c){ return '<option value="' + esc(c) + '">'; }).join("") + "</datalist></label>" +
       '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:28px">' +
         '<button type="button" class="btn" id="saveBtn">' + (isNew ? "追加する" : "保存する") + "</button>" +
         (isNew ? "" : '<button type="button" class="btn ghost" id="cancelBtn">キャンセル</button>') +
       "</div>" +
     "</div>";
-  renderSubEditor();
   Array.prototype.forEach.call(document.querySelectorAll("#fPri [data-pri]"), function(b){
     b.addEventListener("click", function(){
       ui.formPriority = b.getAttribute("data-pri"); sCursor();
@@ -1372,26 +1473,19 @@ function renderForm(editId){
       });
     });
   });
-  $("subAdd").addEventListener("click", function(){
-    collectSubs();
-    ui.formSubs.push({ id: uid(), title: "", done: false });
-    renderSubEditor();
-  });
   $("saveBtn").addEventListener("click", function(){
     var title = $("fTitle").value.trim();
     if (!title) { toast("タイトルを入力してほしい"); $("fTitle").focus(); return; }
-    collectSubs();
-    var subs = ui.formSubs.filter(function(s){ return s.title.trim(); })
-      .map(function(s){ return { id: s.id, title: s.title.trim(), done: s.done }; });
+    var tags = parseTags($("fTags").value);
     if (isNew) {
       state.tasks.unshift({ id: uid(), title: title.slice(0,100), note: $("fNote").value,
         dueDate: $("fDue").value, priority: ui.formPriority, category: $("fCat").value.trim(),
-        status: "todo", subtasks: subs, createdAt: new Date().toISOString(), completedAt: "" });
+        tags: tags, status: "todo", createdAt: new Date().toISOString(), completedAt: "" });
       save(); sDecide(); toast("タスクを追加した");
       goScreen("quests", false);
     } else {
       t.title = title.slice(0,100); t.note = $("fNote").value; t.dueDate = $("fDue").value;
-      t.priority = ui.formPriority; t.category = $("fCat").value.trim(); t.subtasks = subs;
+      t.priority = ui.formPriority; t.category = $("fCat").value.trim(); t.tags = tags;
       save(); sDecide(); toast("保存した");
       goScreen("detail", true);
     }
@@ -1401,26 +1495,6 @@ function renderForm(editId){
   var cb = $("cancelBtn");
   if (cb) cb.addEventListener("click", goBack);
   setTimeout(function(){ var f = $("fTitle"); if (f) f.focus(); }, reducedMotion() ? 30 : 400);
-}
-function collectSubs(){
-  Array.prototype.forEach.call(document.querySelectorAll("#subEdit .srow"), function(row, i){
-    if (!ui.formSubs[i]) return;
-    ui.formSubs[i].title = row.querySelector("input[type=text]").value;
-    ui.formSubs[i].done = row.querySelector("input[type=checkbox]").checked;
-  });
-}
-function renderSubEditor(){
-  var w = $("subEdit"); if (!w) return;
-  w.innerHTML = ui.formSubs.map(function(s){
-    return '<div class="srow"><label><input type="checkbox"' + (s.done ? " checked" : "") + " />済</label>" +
-      '<input type="text" value="' + esc(s.title) + '" placeholder="サブタスク名" maxlength="100" />' +
-      '<button type="button" class="del">削除</button></div>';
-  }).join("");
-  Array.prototype.forEach.call(w.querySelectorAll(".srow"), function(row, i){
-    row.querySelector(".del").addEventListener("click", function(){
-      collectSubs(); ui.formSubs.splice(i, 1); renderSubEditor();
-    });
-  });
 }
 function confirmDelete(t){
   var ov = $("overlay");
@@ -1505,7 +1579,7 @@ function rowHtmlSimple(t){
   meta += priBadge(t);
   if (t.category) meta += '<span class="cat">' + esc(t.category) + "</span>";
   if (over) meta += '<span class="badge-over">OVERDUE</span>';
-  meta += subInfo(t);
+  meta += tagChips(t, false);
   var opsBtns = "";
   if (t.status === "done") {
     opsBtns = '<button type="button" data-act="toggle">未完了に戻す</button>';
@@ -1569,7 +1643,7 @@ function recRowHtml(t){
   if (t.completedAt) meta += '<span>完了 ' + esc(fmtDateTime(t.completedAt)) + "</span>";
   if (t.dueDate) meta += '<span>期限 ' + fmtDate(t.dueDate) + "</span>";
   if (t.category) meta += '<span class="cat">' + esc(t.category) + "</span>";
-  meta += subInfo(t);
+  meta += tagChips(t, false);
   return '<div class="trow p-' + t.priority + ' done" data-id="' + t.id + '">' +
     '<div class="pbar"></div>' +
     '<button type="button" class="check" data-act="toggle" aria-label="未完了に戻す"></button>' +
@@ -1594,6 +1668,12 @@ function renderRecords(){
   var filters = [["today","当日"],["yesterday","昨日"],["week","今週"],["month","今月"],["all","全て"]];
   var range = recRange(ui.recFilter);
   var list = recFilteredDone();
+  var rsize = pageSize();
+  var rpages = Math.max(1, Math.ceil(list.length / rsize));
+  if (ui.recPage > rpages) ui.recPage = rpages;
+  if (ui.recPage < 1) ui.recPage = 1;
+  var rstart = (ui.recPage - 1) * rsize;
+  var rlist = list.slice(rstart, rstart + rsize);
   var chips = filters.map(function(c){
     return '<button type="button" class="chip' + (ui.recFilter === c[0] ? " on" : "") + '" data-recfilter="' + c[0] + '"><span>' + c[1] + "</span></button>";
   }).join("");
@@ -1608,15 +1688,20 @@ function renderRecords(){
     '<h3 style="font-family:var(--serif);color:#fff;margin:26px 0 10px">完了タスク — ' + esc(range.label) + "（" + list.length + '件）</h3>' +
     '<div class="chips" role="group" aria-label="期間フィルタ">' + chips + "</div>" +
     (list.length
-      ? list.map(recRowHtml).join("")
+      ? rlist.map(recRowHtml).join("") + pagerHtml(ui.recPage, rpages, list.length, "data-rpage")
       : '<div class="empty"><b>完了タスクはない</b>' + (ui.recFilter === "today" ? "今日完了したタスクはない。" : "この期間に完了したタスクはない。") + "期間を切り替えて確認できる。</div>") +
     "</div>";
   Array.prototype.forEach.call(document.querySelectorAll("[data-recfilter]"), function(el){
     el.addEventListener("click", function(){
       ui.recFilter = el.getAttribute("data-recfilter");
+      ui.recPage = 1;
       sCursor(); renderRecords();
     });
   });
+  bindPager("data-rpage",
+    function(){ return ui.recPage; },
+    function(p){ ui.recPage = p; },
+    function(){ renderRecords(); });
   Array.prototype.forEach.call(document.querySelectorAll(".trow"), function(row){
     row.addEventListener("click", function(e){
       var id = row.getAttribute("data-id");
@@ -1718,7 +1803,8 @@ $("importFile").addEventListener("change", function(){
         t.priority = ["high","normal","low"].indexOf(t.priority) >= 0 ? t.priority : "normal";
         t.category = t.category || "";
         t.status = (t.status === "done" || t.status === "doing") ? t.status : "todo";
-        t.subtasks = Array.isArray(t.subtasks) ? t.subtasks : [];
+        t.tags = normalizeTags(t.tags);
+        delete t.subtasks;
         t.createdAt = t.createdAt || new Date().toISOString();
         t.completedAt = t.completedAt || "";
       });
@@ -1761,7 +1847,7 @@ document.addEventListener("keydown", function(e){
       onMenuMove();
     } else if (ui.screen === "quests") {
       var n = visibleTasks().length;
-      if (n) { ui.kbIndex = Math.min(n - 1, Math.max(0, ui.kbIndex + d)); sCursor(); renderQuests(false); focusKbRow(); }
+      if (n) { ui.kbIndex = Math.min(n - 1, Math.max(0, ui.kbIndex + d)); ui.page = Math.floor(ui.kbIndex / pageSize()) + 1; sCursor(); renderQuests(false); focusKbRow(); }
     }
   }
   else if (e.key === "Enter") {
@@ -1789,8 +1875,8 @@ document.addEventListener("keydown", function(e){
   }
 });
 function focusKbRow(){
-  var rows = document.querySelectorAll(".trow");
-  if (rows[ui.kbIndex]) rows[ui.kbIndex].scrollIntoView({ block: "nearest" });
+  var el = document.querySelector(".trow.kb");
+  if (el) el.scrollIntoView({ block: "nearest" });
 }
 var touchX = null, touchY = null, touchEdge = false;
 document.addEventListener("touchstart", function(e){
@@ -1806,6 +1892,206 @@ document.addEventListener("touchend", function(e){
   touchX = null;
 }, { passive: true });
 document.addEventListener("pointerdown", function(){ ac(); }, { once: true });
+
+/* ---------- WebGPU background + completion bursts ---------- */
+var gpuState = { ok:false, bursts:[], start:0 };
+function accentRGB(){
+  var c = document.body.className;
+  if (c.indexOf("theme-red") >= 0) return [1.0, 0.42, 0.42];
+  if (c.indexOf("theme-yellow") >= 0) return [0.96, 0.72, 0.0];
+  if (c.indexOf("theme-white") >= 0) return [0.0, 0.56, 0.72];
+  if (c.indexOf("theme-dark") >= 0) return [0.54, 0.66, 0.78];
+  return [0.0, 0.83, 1.0];
+}
+var burstParts = [], burstRaf = 0;
+function spawnBurst(nx, ny){
+  var now = performance.now() / 1000;
+  gpuState.bursts.push({ x: nx, y: ny, t: now - gpuState.start });
+  if (gpuState.bursts.length > 8) gpuState.bursts.shift();
+  spawnBurst2D(nx * window.innerWidth, ny * window.innerHeight);
+}
+function spawnBurst2D(px, py){
+  var cv = $("burstCanvas"); if (!cv) return;
+  var a = accentRGB();
+  var col = "rgb(" + Math.round(a[0]*255) + "," + Math.round(a[1]*255) + "," + Math.round(a[2]*255) + ")";
+  for (var i = 0; i < 46; i++) {
+    var ang = Math.random() * Math.PI * 2;
+    var sp = 90 + Math.random() * 340;
+    burstParts.push({ x: px, y: py, vx: Math.cos(ang)*sp, vy: Math.sin(ang)*sp - 60,
+      life: 0, max: 0.55 + Math.random()*0.55, size: 1.6 + Math.random()*3.4,
+      col: Math.random() < 0.3 ? "#FFFFFF" : col, shape: Math.random() < 0.4 ? 1 : 0 });
+  }
+  for (var j = 0; j < 10; j++) {
+    var a2 = (j / 10) * Math.PI * 2;
+    burstParts.push({ x: px, y: py, vx: Math.cos(a2)*210, vy: Math.sin(a2)*210,
+      life: 0, max: 0.7, size: 2.4, col: "#FFFFFF", shape: 1 });
+  }
+  if (!burstRaf) burstTick();
+}
+function burstTick(){
+  var cv = $("burstCanvas"); if (!cv) { burstRaf = 0; return; }
+  var dpr = Math.min(1.5, window.devicePixelRatio || 1);
+  if (cv.width !== Math.round(window.innerWidth*dpr)) { cv.width = Math.round(window.innerWidth*dpr); cv.height = Math.round(window.innerHeight*dpr); }
+  var ctx = cv.getContext("2d"); if (!ctx) { burstRaf = 0; return; }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  var last = performance.now();
+  var step = function(){
+    var nowT = performance.now();
+    var dt = Math.min(0.033, (nowT - last) / 1000); last = nowT;
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    burstParts = burstParts.filter(function(p){ return p.life < p.max; });
+    if (!burstParts.length) { burstRaf = 0; return; }
+    burstParts.forEach(function(p){
+      p.life += dt; p.x += p.vx * dt; p.y += p.vy * dt;
+      p.vx *= 0.985; p.vy = p.vy * 0.985 + 300 * dt;
+      var k = 1 - p.life / p.max;
+      ctx.globalAlpha = Math.max(0, k);
+      ctx.fillStyle = p.col; ctx.strokeStyle = p.col;
+      if (p.shape) {
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(0.785);
+        ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size); ctx.restore();
+      } else {
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.size * k + 0.4, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.beginPath(); ctx.moveTo(p.x - p.vx * 0.03, p.y - p.vy * 0.03); ctx.lineTo(p.x, p.y);
+      ctx.lineWidth = 1.2; ctx.globalAlpha = Math.max(0, k * 0.6); ctx.stroke();
+    });
+    ctx.globalAlpha = 1;
+    burstRaf = requestAnimationFrame(step);
+  };
+  burstRaf = requestAnimationFrame(step);
+}
+function initWebGPU(){
+  var cv = $("gpuCanvas");
+  if (!cv || !navigator.gpu) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches && !state.settings.motion) return;
+  navigator.gpu.requestAdapter({ powerPreference: "low-power" }).then(function(adapter){
+    if (!adapter) return;
+    return adapter.requestDevice().then(function(device){ setupGPU(cv, device); });
+  }).catch(function(){});
+}
+function setupGPU(cv, device){
+  var ctx = cv.getContext("webgpu");
+  if (!ctx) return;
+  var format = navigator.gpu.getPreferredCanvasFormat();
+  function resize(){
+    var dpr = Math.min(1.5, window.devicePixelRatio || 1);
+    cv.width = Math.max(2, Math.round(window.innerWidth * dpr));
+    cv.height = Math.max(2, Math.round(window.innerHeight * dpr));
+    ctx.configure({ device: device, format: format, alphaMode: "premultiplied" });
+  }
+  resize();
+  window.addEventListener("resize", resize);
+  var shader = [
+    "struct U { time: f32, _p0: f32, res: vec2f, accent: vec3f, _p1: f32, bursts: array<vec4f, 8> }",
+    "@group(0) @binding(0) var<uniform> u: U;",
+    "@vertex fn vs(@builtin(vertex_index) i: u32) -> @builtin(position) vec4f {",
+    "  var p = array<vec2f,3>(vec2f(-1.0,-1.0), vec2f(3.0,-1.0), vec2f(-1.0,3.0));",
+    "  return vec4f(p[i], 0.0, 1.0); }",
+    "fn hash21(p: vec2f) -> f32 { var q = fract(p * vec2f(123.34, 456.21)); q += dot(q, q + 45.32); return fract(q.x * q.y); }",
+    "fn petalLayer(uv: vec2f, aspect: f32, scale: f32, fall: f32, size: f32, thresh: f32, maxA: f32, t: f32, tint: vec3f) -> vec4f {",
+    "  var p = uv * vec2f(aspect, 1.0) * scale;",
+    "  p.y += t * fall;",
+    "  p.x += sin(t * 0.5 + p.y * 0.45) * 0.22;",
+    "  var cell = floor(p); var f = fract(p) - 0.5;",
+    "  var h = hash21(cell);",
+    "  if (h < thresh) { return vec4f(0.0); }",
+    "  var off = (vec2f(hash21(cell + 7.1), hash21(cell + 3.7)) - 0.5) * 0.4;",
+    "  var q = f - off;",
+    "  var phase = h * 40.0;",
+    "  var flut = sin(t * (0.9 + h * 0.9) + phase);",
+    "  var ang = h * 6.2831 + flut * 0.85;",
+    "  var ca = cos(ang); var sa = sin(ang);",
+    "  var r = vec2f(ca * q.x - sa * q.y, sa * q.x + ca * q.y);",
+    "  var flip = 0.30 + 0.70 * abs(cos(t * (0.7 + h * 0.8) + phase * 1.7));",
+    "  r = vec2f(r.x / flip, r.y);",
+    "  var e = length(r / vec2f(size * 0.62, size)) - 1.0;",
+    "  var notch = length((r - vec2f(0.0, size * 0.95)) / vec2f(size * 0.34)) - 1.0;",
+    "  var shape = max(e, -notch);",
+    "  var a = smoothstep(0.22, -0.22, shape) * maxA;",
+    "  if (a <= 0.001) { return vec4f(0.0); }",
+    "  var shade = 0.82 + 0.30 * (r.y / max(size, 0.001)) + 0.18 * flut;",
+    "  var vein = smoothstep(0.05, 0.0, abs(r.x)) * 0.12;",
+    "  return vec4f(tint * shade - vein, a); }",
+    "fn starLayer(uv: vec2f, aspect: f32, scale: f32, drift: f32, t: f32) -> f32 {",
+    "  var p = uv * vec2f(aspect, 1.0) * scale + vec2f(t * drift, t * drift * 0.35);",
+    "  var cell = floor(p); var f = fract(p) - 0.5;",
+    "  var h = hash21(cell);",
+    "  if (h < 0.45) { return 0.0; }",
+    "  var off = (vec2f(hash21(cell + 11.3), hash21(cell + 5.9)) - 0.5) * 0.6;",
+    "  var q = f - off; var d = length(q);",
+    "  var tw = 0.25 + 0.75 * pow(0.5 + 0.5 * sin(t * (1.0 + h * 2.6) + h * 43.0), 3.0);",
+    "  var core = smoothstep(0.13, 0.0, d) * tw;",
+    "  var cross = (exp(-abs(q.x) * 30.0) + exp(-abs(q.y) * 30.0)) * exp(-d * 8.0) * tw * step(0.82, h);",
+    "  return core * 0.8 + cross * 0.55; }",
+    "@fragment fn fs(@builtin(position) pos: vec4f) -> @location(0) vec4f {",
+    "  var uv = pos.xy / u.res;",
+    "  var t = u.time;",
+    "  var aspect = u.res.x / max(1.0, u.res.y);",
+    "  var petalTint = mix(vec3f(1.0, 0.58, 0.68), u.accent, 0.28);",
+    "  var starTint = mix(u.accent, vec3f(1.0), 0.6);",
+    "  var amb = pow(0.5 + 0.5 * sin(uv.x * 2.0 - t * 0.18 + uv.y * 1.6), 6.0) * 0.05;",
+    "  var pf = petalLayer(uv, aspect, 10.0, 0.035, 0.11, 0.62, 0.5, t, petalTint);",
+    "  var pn = petalLayer(uv, aspect, 5.5, 0.06, 0.17, 0.68, 0.8, t, petalTint);",
+    "  var st = starLayer(uv, aspect, 24.0, 0.02, t) * 0.7 + starLayer(uv, aspect, 46.0, 0.03, t) * 0.45;",
+    "  var col = u.accent * amb + pf.rgb * pf.a + pn.rgb * pn.a + starTint * st * 0.55;",
+    "  var alpha = clamp(amb + pf.a * 0.85 + pn.a * 0.9 + st * 0.4, 0.0, 0.88);",
+    "  for (var i = 0; i < 8; i++) {",
+    "    var b = u.bursts[i];",
+    "    var age = t - b.z;",
+    "    if (b.w > 0.5 && age > 0.0 && age < 1.1) {",
+    "      var c = (uv - b.xy) * vec2f(aspect, 1.0);",
+    "      var dist = length(c);",
+    "      var fade = 1.0 - age / 1.1;",
+    "      var ring = smoothstep(0.03, 0.0, abs(dist - age * 0.38)) * fade;",
+    "      var glow = exp(-dist * 9.0) * fade * fade;",
+    "      var rays = pow(abs(sin(atan2(c.y, c.x) * 6.0 + b.z * 10.0)), 8.0) * smoothstep(age * 0.42, 0.0, dist) * fade;",
+    "      col += (u.accent * 1.4 + vec3f(0.5)) * (ring * 0.9 + glow * 0.8 + rays * 0.7);",
+    "      alpha = clamp(alpha + ring * 0.7 + glow * 0.6 + rays * 0.5, 0.0, 1.0); } }",
+    "  return vec4f(col * alpha, alpha); }"
+  ].join("\n");
+  var module = device.createShaderModule({ code: shader });
+  var pipe = device.createRenderPipeline({
+    layout: "auto",
+    vertex: { module: module, entryPoint: "vs" },
+    fragment: { module: module, entryPoint: "fs", targets: [{ format: format,
+      blend: { color: { srcFactor: "src-alpha", dstFactor: "one-minus-src-alpha", operation: "add" },
+               alpha: { srcFactor: "one", dstFactor: "one-minus-src-alpha", operation: "add" } } }] },
+    primitive: { topology: "triangle-list" }
+  });
+  var uni = device.createBuffer({ size: 176, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
+  var bind = device.createBindGroup({ layout: pipe.getBindGroupLayout(0),
+    entries: [{ binding: 0, resource: { buffer: uni } }] });
+  gpuState.ok = true;
+  gpuState.start = performance.now() / 1000;
+  document.body.classList.add("gpu-on");
+  var data = new Float32Array(44);
+  var frame = function(){
+    if (!document.body.classList.contains("gpu-on")) return;
+    if (!document.hidden) {
+      var t = performance.now() / 1000 - gpuState.start;
+      var acc = accentRGB();
+      data[0] = t; data[2] = cv.width; data[3] = cv.height;
+      data[4] = acc[0]; data[5] = acc[1]; data[6] = acc[2];
+      for (var i = 0; i < 8; i++) {
+        var b = gpuState.bursts[i];
+        var o = 8 + i * 4;
+        if (b) { data[o] = b.x; data[o+1] = b.y; data[o+2] = b.t; data[o+3] = 1; }
+        else { data[o+3] = 0; }
+      }
+      device.queue.writeBuffer(uni, 0, data);
+      var enc = device.createCommandEncoder();
+      var pass = enc.beginRenderPass({ colorAttachments: [{
+        view: ctx.getCurrentTexture().createView(),
+        clearValue: { r: 0, g: 0, b: 0, a: 0 }, loadOp: "clear", storeOp: "store" }] });
+      pass.setPipeline(pipe); pass.setBindGroup(0, bind); pass.draw(3); pass.end();
+      device.queue.submit([enc.finish()]);
+    }
+    if (!reducedMotion()) requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
+  device.lost.then(function(){ document.body.classList.remove("gpu-on"); gpuState.ok = false; });
+}
 
 /* ---------- init ---------- */
 load();
@@ -1830,6 +2116,7 @@ if (fabSearchBtn) fabSearchBtn.addEventListener("click", function(){
   renderQuests(false);
   if (ui.searchOpen) { var si = $("searchBox"); if (si) si.focus(); }
 });
+initWebGPU();
 renderMenu(true);
 renderQuests(false);
 updateHeader();
