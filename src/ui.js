@@ -3,7 +3,7 @@ import {
   pad, todayStr, fmtDate, isOverdue, isToday, priLabel, esc, normalizeTheme,
   categories, allTags, openTasks, doneTasks, createTask, visibleTasks as domainVisibleTasks,
   searchConditions as domainSearchConditions, pagerNumbers, pageCount, pageSlice,
-  groupQuests, taskStats,
+  groupQuests, taskStats, todayDoneCount,
 } from "./domain.js";
 import { state, ui, uid } from "./state.js";
 import { saveState } from "./storage.js";
@@ -34,7 +34,7 @@ export function updateHeader() {
   const s = taskStats(state.tasks);
   $("hsRemain").textContent = s.open;
   $("hsDone").textContent = s.done;
-  $("hsRate").innerHTML = s.rate + "<em>%</em>";
+  $("hsTodayDone").textContent = todayDoneCount(state.tasks);
 }
 
 export function tickClock() {
@@ -188,9 +188,8 @@ export function renderStatus(anim) {
         '<div class="statbox"><b>' + s.open + '</b><span>残タスク</span></div>' +
         '<div class="statbox gold"><b>' + s.todayN + '</b><span>今日が決戦日</span></div>' +
         '<div class="statbox red"><b>' + s.overdue + '</b><span>期限超過</span></div>' +
-        '<div class="statbox"><b>' + s.rate + '<small>%</small></b><span>達成率</span></div>' +
+        '<div class="statbox"><b>' + todayDoneCount(state.tasks) + '</b><span>今日の完了数</span></div>' +
       '</div>' +
-      '<div class="progress"><i style="width:' + s.rate + '%"></i></div>' +
       (s.next
         ? '<p class="nextdue">次の決戦 — <b>' + esc(s.next.title) + '</b>　<span class="when">' + fmtDate(s.next.dueDate) + (isOverdue(s.next) ? " ・ 超過" : "") + '</span></p>'
         : '<p class="nextdue">期限つきのタスクはない。新たなタスクは <b>NEW TASK</b> から追加できる。</p>') +
