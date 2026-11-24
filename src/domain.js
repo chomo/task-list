@@ -268,13 +268,16 @@ export function completionStreak(tasks, today = todayStr()) {
   return streak;
 }
 
+export function todayDoneCount(tasks, today = todayStr()) {
+  return tasks.filter((t) => t.completedAt && t.completedAt.slice(0, 10) === today).length;
+}
+
 export function taskStats(tasks, today = todayStr()) {
   const open = openTasks(tasks), done = doneTasks(tasks), total = tasks.length;
-  const rate = total ? Math.round(done.length / total * 100) : 0;
   const next = open.filter((t) => t.dueDate)
     .sort((a, b) => (a.dueDate < b.dueDate ? -1 : 1))[0] || null;
   return {
-    open: open.length, done: done.length, total, rate,
+    open: open.length, done: done.length, total,
     overdue: open.filter((t) => isOverdue(t, today)).length,
     todayN: open.filter((t) => isToday(t, today)).length,
     next,

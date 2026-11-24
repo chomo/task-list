@@ -6,7 +6,7 @@ import {
   categories, allTags, openTasks, doneTasks, createTask, normalizeTask,
   normalizeSettings, visibleTasks, searchConditions, pagerNumbers,
   pageCount, pageSlice, recRange, recFilteredDone, completionStreak,
-  taskStats, reorderTasks, moveTaskOrder, setStatus, groupQuests,
+  taskStats, todayDoneCount, reorderTasks, moveTaskOrder, setStatus, groupQuests,
   nextStatus, kanbanGroups, touchTask,
 } from "../src/domain.js";
 import { PAGE_SIZE_MOBILE, PAGE_SIZE_PC } from "../src/config.js";
@@ -314,16 +314,27 @@ test("completionStreak counts back from today (or yesterday)", () => {
   assert.equal(completionStreak([], T), 0);
 });
 
-test("taskStats counts open/done/rate/overdue/today/next", () => {
+test("taskStats counts open/done/overdue/today/next (no rate)", () => {
   const s = taskStats(sample(), T);
   assert.equal(s.open, 4);
   assert.equal(s.done, 1);
   assert.equal(s.total, 5);
-  assert.equal(s.rate, 20);
+  assert.equal("rate" in s, false);
   assert.equal(s.overdue, 1);
   assert.equal(s.todayN, 1);
   assert.equal(s.next.id, "a");
   assert.equal(taskStats([], T).next, null);
+});
+
+test("todayDoneCount counts tasks completed today only", () => {
+  const ts = [
+    mk({ id: "a", status: "done", completedAt: "2026-11-21T08:00:00.000Z" }),
+    mk({ id: "b", status: "done", completedAt: "2026-11-20T08:00:00.000Z" }),
+    mk({ id: "c", status: "done", completedAt: "" }),
+    mk({ id: "d", status: "todo" }),
+  ];
+  assert.equal(todayDoneCount(ts, T), 1);
+  assert.equal(todayDoneCount([], T), 0);
 });
 
 test("nextStatus cycles todo -> doing -> done -> todo", () => {

@@ -2,7 +2,7 @@ import { THEMES, REC_FILTERS, KANBAN_COLS } from "./config.js";
 import {
   pad, todayStr, fmtDate, fmtDateTime, isOverdue, isToday, priLabel, statusLabel, esc,
   parseTags, categories, allTags, doneTasks, createTask, recRange, recFilteredDone,
-  completionStreak, taskStats, kanbanGroups, pageCount, pageSlice, touchTask,
+  completionStreak, kanbanGroups, pageCount, pageSlice, touchTask,
 } from "./domain.js";
 import { state, ui, uid } from "./state.js";
 import { saveState, parseImport } from "./storage.js";
@@ -339,7 +339,6 @@ export function renderRecords() {
     if (t.completedAt) { const k = t.completedAt.slice(0, 10); byDay[k] = (byDay[k] || 0) + 1; }
   });
   const streak = completionStreak(state.tasks);
-  const s = taskStats(state.tasks);
   const range = recRange(ui.recFilter);
   const list = recFilteredDone(state.tasks, ui.recFilter);
   const rsize = pageSize();
@@ -354,8 +353,7 @@ export function renderRecords() {
     '<div class="statgrid">' +
       '<div class="statbox"><b>' + done.length + '</b><span>総完了数</span></div>' +
       '<div class="statbox gold"><b>' + streak + '<small>日</small></b><span>連続完了</span></div>' +
-      '<div class="statbox"><b>' + (byDay[todayStr()] || 0) + '</b><span>今日の完了</span></div>' +
-      '<div class="statbox"><b>' + s.rate + '<small>%</small></b><span>達成率</span></div>' +
+      '<div class="statbox"><b>' + (byDay[todayStr()] || 0) + '</b><span>今日の完了数</span></div>' +
     "</div>" +
     '<h3 style="font-family:var(--serif);color:#fff;margin:26px 0 10px">完了タスク — ' + esc(range.label) + "（" + list.length + '件）</h3>' +
     '<div class="chips" role="group" aria-label="期間フィルタ">' + chips + "</div>" +
